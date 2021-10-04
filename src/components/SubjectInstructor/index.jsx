@@ -12,7 +12,6 @@ import Dropdown from "../Dropdown";
 
 const useStyles = makeStyles({
   root: {
-    width: 150,
     cursor: "pointer",
     transition: "transform 0.3s ease-in-out",
     // todo: add hover effect later
@@ -32,10 +31,7 @@ const useStyles = makeStyles({
 
 /**
  * @param {Object} title
- * @param {String} body
- * @param {String} category [it takes values such as class 1 or class 2]
  * @param {String} image
- * @param {String} labelColor
  */
 export default function SubjectInstructor(props) {
   const classes = useStyles();

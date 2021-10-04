@@ -39,21 +39,19 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(7),
     height: theme.spacing(7),
   },
-  disabledButton: {
-    backgroundColor: "var(--light-purple)",
-    color: "white",
-  },
-  enabledButton: {
-    backgroundColor: "var(--purple)",
-    color: "white",
-    marginLeft: "10px",
-  },
 
   jobContainer: {
     paddingLeft: "0px",
   },
 }));
 
+/**
+ * @param  {String} id
+ * @param  {List} lessons a list containing {name, duration}
+ * @param  {String} title
+ * @param  {String} type can be FAQ or Syllabus
+ * @param  {String} body applicable only for FAQ
+ */
 const ExpandableList = (props) => {
   const classes = useStyles();
 
@@ -78,11 +76,13 @@ const ExpandableList = (props) => {
           {props.title}
         </Typography>
       </AccordionSummary>
-      {props.expandable && (
-        <AccordionDetails>
-          <TableList lessons={props.lessons} />
-        </AccordionDetails>
-      )}
+      <AccordionDetails>
+        {props.type === "FAQ" ? (
+          <TableList contentType={props.type} body={props.body} />
+        ) : (
+          <TableList lessons={props.lessons} contentType={props.type} />
+        )}
+      </AccordionDetails>
     </Accordion>
   );
 };

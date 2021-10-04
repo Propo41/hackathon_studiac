@@ -120,15 +120,15 @@ const typography = {
       lg: FONT_SIZE_SMALL,
     }),
   },
-  // unused
+  // used for markdown viewer mobile breakpoint xs
   body2: {
     lineHeight: 22 / 14,
-    fontSize: pxToRem(14),
+    fontSize: pxToRem(FONT_SIZE_EXTRA_SMALL),
   },
-  // unused
+  // used for markdown viewer mobile breakpoint md
   caption: {
     lineHeight: 1.5,
-    fontSize: pxToRem(12),
+    fontSize: pxToRem(16),
   },
   // unused
   overline: {

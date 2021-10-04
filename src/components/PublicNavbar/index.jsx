@@ -110,7 +110,7 @@ const PublicNavbar = () => {
 
   return (
     <div className={classes.root}>
-      <Toolbar style={{paddingLeft:0, paddingRight:0}}>
+      <Toolbar style={{ paddingLeft: 0, paddingRight: 0 }}>
         {/* Place brand logo here */}
         <Typography variant="h2" className={classes.title}>
           <Link to="/" className={classes.logoText}>
@@ -146,7 +146,7 @@ const PublicNavbar = () => {
                 onClick={handleClose}
                 style={{ backgroundColor: "transparent" }}
               >
-                <Link to="/" className={classes.navbar}>
+                <Link to="/subjects" className={classes.navbar}>
                   <Typography variant="h2" className={classes.navbar}>
                     Subjects
                   </Typography>
@@ -170,7 +170,7 @@ const PublicNavbar = () => {
         ) : (
           <div className={classes.headerOptions}>
             <Button style={{ backgroundColor: "transparent" }}>
-              <Link className={classes.navbar} to="/">
+              <Link className={classes.navbar} to="/subjects">
                 Subjects
               </Link>
             </Button>
@@ -180,16 +180,6 @@ const PublicNavbar = () => {
               </Link>
             </Button>
 
-            {/* filled input */}
-            <div className={classes.rightToolbar}>
-              <Button
-                variant="contained"
-                className={classes.buttonPrimary}
-                disableElevation
-              >
-                Join for free
-              </Button>
-            </div>
             {/* outlined button */}
             <div className={classes.rightToolbar}>
               <Button
@@ -197,7 +187,17 @@ const PublicNavbar = () => {
                 className={classes.buttonSecondary}
                 disableElevation
               >
-                Secondary
+                Join for free
+              </Button>
+            </div>
+            {/* filled input */}
+            <div className={classes.rightToolbar}>
+              <Button
+                variant="contained"
+                className={classes.buttonPrimary}
+                disableElevation
+              >
+                Login
               </Button>
             </div>
           </div>

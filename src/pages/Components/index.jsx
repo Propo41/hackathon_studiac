@@ -117,7 +117,6 @@ const Components = () => {
       <div style={{ marginTop: "10px" }}>
         <ExpandableList
           lessons={rows}
-          expandable={true}
           title={"Chapter 1: Lorem ipsum"}
         />
       </div>

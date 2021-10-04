@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * @param {string} title
+ */
 const Separator = ({ title }) => {
   const classes = useStyles();
   return (

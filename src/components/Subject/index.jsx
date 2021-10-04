@@ -15,10 +15,10 @@ const useStyles = makeStyles({
     cursor: "pointer",
     transition: "transform 0.3s ease-in-out",
     // todo: add hover effect later
-    /*   "&:hover": {
+    "&:hover": {
       transform: "scale(1.02)",
       transition: "transform 0.2s ease-in-out",
-    }, */
+    },
   },
   cardContent: {
     paddingLeft: 0,
@@ -56,7 +56,8 @@ export default function Subject(props) {
           {props.title}
         </Typography>
         <Typography variant="body1" color="textSecondary" component="p">
-          {props.body}
+          {/* slice props.body to 10 characters and add ... to the end */}
+          {props.body.slice(0, 80) + "..."}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>

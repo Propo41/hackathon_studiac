@@ -69,9 +69,9 @@ export default function OurCommunity({ community }) {
           className={classes.itemMargin}
         >
           {/* if index is even  */}
-          {index % 2 === 1 && <LeftChild item={item} />}
+          {index % 2 === 0 && <LeftChild item={item} />}
           {/* if index is odd  */}
-          {index % 2 === 0 && <RightChild item={item} />}
+          {index % 2 === 1 && <RightChild item={item} />}
         </Grid>
       ))}
     </Grid>

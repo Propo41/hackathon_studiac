@@ -14,7 +14,6 @@ import Label from "../Label";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "inline-flex",
-    minWidth: theme.spacing(40),
   },
   details: {
     display: "flex",
@@ -22,23 +21,11 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flex: "1 0 auto",
+    paddingTop: 0,
   },
-  cover: {
-    width: 120,
-  },
-  controls: {
-    display: "flex",
-    alignItems: "center",
-    paddingLeft: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-  playIcon: {
-    height: 38,
-    width: 38,
-  },
-  label: {
-    paddingLeft: theme.spacing(1),
-  },
+  media:{
+    borderBottomLeftRadius: "inherit"
+  }
 }));
 
 /**
@@ -54,9 +41,12 @@ export default function SubjectFeatured(props) {
   return (
     <Card className={classes.root} elevation={0}>
       <CardMedia
-        className={classes.cover}
+        component="img"
+        alt={props.title}
+        height="150"
         image={props.image}
         title={props.title}
+        className={classes.media}
       />
       <div className={classes.details}>
         <CardContent className={classes.content}>
@@ -64,16 +54,10 @@ export default function SubjectFeatured(props) {
             {props.title}
           </Typography>
           <Typography variant="body1" color="textSecondary">
-            {props.body}
+            {/* slice props.body to 40 chars */}
+            {props.body.slice(0, 60)}...
           </Typography>
         </CardContent>
-        <div className={classes.label}>
-          <Label
-            text={props.category}
-            icon={"bookmark"}
-            color={props.labelColor}
-          />
-        </div>
       </div>
     </Card>
   );

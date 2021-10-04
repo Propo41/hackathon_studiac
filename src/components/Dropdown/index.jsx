@@ -40,18 +40,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dropdown() {
+/**
+ * @param  {List<String>} options a list of string
+ * @param  {String} currentValue the currently selected value
+ */
+export default function Dropdown(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [selected, setSelected] = React.useState("Atria");
+  const [selected, setSelected] = React.useState(
+    props.currentValue ? props.currentValue : props.options[0]
+  );
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = (event) => {
     console.log(event.target.innerText);
-    setSelected(event.target.innerText);
+    if (event.target.innerText !== selected) {
+      if (event.target.innerText) {
+        setSelected(event.target.innerText);
+      } else {
+        setSelected(selected);
+      }
+    }
+
     setAnchorEl(null);
   };
 
@@ -89,7 +102,7 @@ export default function Dropdown() {
           },
         }}
       >
-        {options.map((option) => (
+        {props.options.map((option) => (
           <MenuItem
             key={option}
             selected={option === selected}

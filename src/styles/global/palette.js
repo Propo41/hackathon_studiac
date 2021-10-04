@@ -91,6 +91,7 @@ const palette = {
   white: "#fff",
   ash: "#F3F3F3",
   darkash: "#969696",
+  purple: "#54499E",
   lightash: "#E8E9EB",
   lightash2: "#F5F7FA",
   navyblue: "#162874", // navyblue
