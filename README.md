@@ -2,9 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Day 1: 3rd Oct
 
-In the project directory, you can run:
+Compeleted the following front end implementations:
+1. Created all the components required
+2. Created the landing page. Took very long though
+
+## Day 2: 4th Oct
+1. Completed several pages.
+2. Payment page and video rendering page is not completed yet.
+
 
 ### `yarn start`
 
