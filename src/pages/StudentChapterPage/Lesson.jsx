@@ -22,6 +22,12 @@ const useStyles = makeStyles((theme) => ({
     borderBottomLeftRadius: "none",
     borderBottomRightRadius: "none",
   },
+  mediaIcon: {
+    borderBottomLeftRadius: "none",
+    borderBottomRightRadius: "none",
+    objectFit: "scale-down",
+    backgroundColor: theme.palette.lightash,
+  },
 
   root: {
     minWidth: 150,
@@ -43,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
   pos: {
     marginBottom: 12,
   },
+  buttonSecondary: {
+    borderColor: theme.palette.lightgreen,
+    color: theme.palette.green,
+    fontSize: theme.typography.body2.fontSize,
+    textTransform: "none",
+    marginLeft: theme.spacing(0),
+  },
 }));
 
 /**
@@ -55,8 +68,14 @@ function Lesson(props) {
   const theme = useTheme();
 
   console.log(lesson);
+
+  const onLessonClick = () => {
+    console.log("clicked");
+    props.onLessonClick(lesson);
+  };
+
   return (
-    <Card className={classes.root} elevation={0}>
+    <Card className={classes.root} elevation={0} onClick={onLessonClick}>
       <CardMedia
         component="img"
         alt={props.title}
@@ -64,10 +83,12 @@ function Lesson(props) {
         image={
           lesson.media.type === "video"
             ? lesson.media.preview
-            : "/assets/file_preview_small.png"
+            : "/assets/file_icon.svg"
         }
         title={props.title}
-        className={classes.media}
+        className={
+          lesson.media.type === "video" ? classes.media : classes.mediaIcon
+        }
       />
       <CardContent style={{ paddingLeft: 0 }}>
         <Typography variant="body1" color="textPrimary">
@@ -75,9 +96,15 @@ function Lesson(props) {
         </Typography>
       </CardContent>
 
-      <CardActions>
+      <CardActions style={{ paddingLeft: 0 }}>
         {props.isWatching && (
-          <Button size="small" disabled style={{ color: theme.palette.green }}>
+          <Button
+            size="small"
+            variant="outlined"
+            disabled
+            style={{ color: theme.palette.green }}
+            className={classes.buttonSecondary}
+          >
             Watching
           </Button>
         )}
@@ -87,26 +114,3 @@ function Lesson(props) {
 }
 
 export default Lesson;
-
-/* <Card className={classes.root} elevation={0} sx={{ minWidth: 275 }}>
-      <CardMedia
-        component="img"
-        alt={props.title}
-        height="120"
-        image={
-          lesson.type === "video"
-            ? lesson.media.preview
-            : "/assets/file_preview_small.png"
-        }
-        title={props.title}
-        className={classes.media}
-      />
-      <CardContent className={classes.content}>
-        <Typography variant="body1" color="textPrimary">
-          {lesson.title}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card> */

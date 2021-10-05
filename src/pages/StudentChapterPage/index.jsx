@@ -11,6 +11,7 @@ import {
   Modal,
   Dialog,
   Avatar,
+  CardHeader,
 } from "@material-ui/core";
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
@@ -18,6 +19,10 @@ import Footer from "../../components/Footer";
 import PublicNavbar from "../../components/PublicNavbar";
 import { useTheme } from "@material-ui/styles";
 import Lesson from "./Lesson";
+import ReactPlayer from "react-player";
+import fileDownload from "js-file-download";
+import axios from "axios";
+import { useNavigate } from "react-router";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -70,6 +75,12 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(3),
     textAlign: "center",
   },
+  mediaIcon: {
+    objectFit: "scale-down",
+    backgroundColor: theme.palette.lightash,
+    textAlign: "-webkit-center",
+    paddingTop: theme.spacing(3),
+  },
 }));
 
 const chapter = {
@@ -90,8 +101,9 @@ const chapter = {
       `,
       media: {
         type: "video",
-        preview: "https://picsum.photos/200/300",
-        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        preview:
+          "https://c.ndtvimg.com/2020-03/ctpi4dd8_billie-eilish-body-shaming_625x300_11_March_20.jpg",
+        url: "https://youtu.be/6GTw3kyaKgQ",
       },
     },
     {
@@ -106,6 +118,7 @@ const chapter = {
       media: {
         type: "material",
         url: "http://www.africau.edu/images/default/sample.pdf",
+        fileType: "pdf",
       },
     },
     {
@@ -120,6 +133,7 @@ const chapter = {
       media: {
         type: "material",
         url: "http://www.africau.edu/images/default/sample.pdf",
+        fileType: "pdf",
       },
     },
     {
@@ -133,8 +147,8 @@ const chapter = {
       `,
       media: {
         type: "video",
-        preview: "https://picsum.photos/200/300",
-        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        preview: "https://i.insider.com/5e501d3ba9f40c2c1e2c98e6?width=700",
+        url: "https://youtu.be/Ga6N2au2xrc",
       },
     },
   ],
@@ -143,6 +157,19 @@ const chapter = {
 const StudentChapterPage = () => {
   const theme = useTheme();
   const classes = useStyles();
+  // by default, start from 0th lesson
+  const [currentLesson, setCurrentLesson] = React.useState(chapter.lessons[0]);
+
+  const onLessonClick = (lesson) => {
+    console.log(lesson);
+    setCurrentLesson(lesson);
+    // smooth scroll to top with animation
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <>
@@ -201,15 +228,35 @@ const StudentChapterPage = () => {
           style={{ marginTop: theme.spacing(0) }}
         >
           <div style={{ marginTop: theme.spacing(3) }}>
-            <Card elevation={0}>
-              <CardMedia
-                component="img"
-                alt={chapter.lessons[0].title}
-                height={theme.spacing(60)}
-                image={chapter.lessons[0].media.preview}
-                title={chapter.lessons[0].title}
-              />
-            </Card>
+            {currentLesson.media.type === "video" ? (
+              <Card elevation={0}>
+                <ReactPlayer
+                  url={currentLesson.media.url}
+                  controls={true}
+                  width="100%"
+                  height={theme.spacing(55)}
+                />
+              </Card>
+            ) : (
+              <Card elevation={0} className={classes.mediaIcon}>
+                <Avatar variant="rounded" src="/assets/file_icon.svg" />
+
+                <CardContent>
+                  <Button
+                    size="small"
+                    href={currentLesson.media.url}
+                    target="_blank"
+                    to={currentLesson.media.url}
+                    style={{
+                      color: theme.palette.darkash,
+                      textTransform: "none",
+                    }}
+                  >
+                    Download
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </Container>
 
@@ -231,7 +278,7 @@ const StudentChapterPage = () => {
                     paddingRight: theme.spacing(2),
                   }}
                 >
-                  {chapter.lessons[0].number + ". " + chapter.lessons[0].title}
+                  {currentLesson.number + ". " + currentLesson.title}
                 </Typography>
 
                 <Typography
@@ -242,14 +289,19 @@ const StudentChapterPage = () => {
                   }}
                   color="textSecondary"
                 >
-                  {chapter.lessons[0].description}
+                  {currentLesson.description}
                 </Typography>
               </Grid>
 
               {/* available lessons */}
               <Grid item xs={12} md={4}>
                 {chapter.lessons.map((lesson, index) => (
-                  <Lesson lesson={lesson} key={index} />
+                  <Lesson
+                    lesson={lesson}
+                    key={index}
+                    isWatching={lesson.id === currentLesson.id}
+                    onLessonClick={onLessonClick}
+                  />
                 ))}
               </Grid>
             </Grid>
