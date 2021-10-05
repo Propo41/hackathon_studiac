@@ -9,6 +9,8 @@ import SubjectsDetailsPage from "../pages/SubjectDetailsPage";
 import Subjects from "../pages/SubjectsPage";
 import SignUpPage from "../pages/SignUpPage";
 import SetupProfilePage from "../pages/SetupProfilePage";
+import PaymentPage from "../pages/PaymentPage";
+import StudentChapterPage from "../pages/StudentChapterPage";
 
 export default function Router() {
   return useRoutes([
@@ -34,6 +36,10 @@ export default function Router() {
     },
 
     {
+      path: "/lesson",
+      element: <StudentChapterPage />,
+    },
+    {
       path: "/subjects",
       element: <Subjects />,
     },
@@ -48,6 +54,10 @@ export default function Router() {
     {
       path: "/student/subjects",
       element: <StudentMySubjectsPage />,
+    },
+    {
+      path: "/payment",
+      element: <PaymentPage />,
     },
 
     {

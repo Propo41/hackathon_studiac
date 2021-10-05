@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     color: theme.palette.darkash,
-  }
+  },
 }));
 
 /**

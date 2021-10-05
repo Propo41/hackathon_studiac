@@ -18,7 +18,6 @@ import TextInputLayout from "../../components/TextInputLayout";
 
 TODO: use "@material-ui/pickers" for date picker
 ref: https://material-ui-pickers.dev/demo/datepicker#static-mode 
-
 TODO: make some of the input fields to drop down later on
 
 */

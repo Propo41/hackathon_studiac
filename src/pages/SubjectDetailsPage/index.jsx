@@ -17,7 +17,6 @@ import PublicNavbar from "../../components/PublicNavbar";
 import { useTheme } from "@material-ui/styles";
 import Separator from "../../components/Separator";
 import Header from "./Header";
-import OurSubjects from "./OurSubjects";
 import Dropdown from "../../components/Dropdown";
 import ExpandableList from "../../components/ExpandableList";
 import MarkdownViewer from "../../components/MarkdownViewer";

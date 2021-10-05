@@ -17,8 +17,9 @@ import MapIcon from "@material-ui/icons/Map";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
 import AttachmentIcon from "@material-ui/icons/Attachment";
+import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
 /**
- * https://v4.mui.com/components/material-icons/#material-icons 
+ * https://v4.mui.com/components/material-icons/#material-icons
  * A util function that returns the desired Material Icon based on the parameters provided
  * @param iconName bookmark, mail, location, requirements, phone, delete, upload, user, lock, key, company, description
  * @param color ash, black, white, darkash, body-color, purple, green, red, light-purple
@@ -27,6 +28,8 @@ import AttachmentIcon from "@material-ui/icons/Attachment";
  */
 const iconMapper = (iconName, color, parent) => {
   switch (iconName) {
+    case "playing":
+      return <PlayCircleFilledIcon style={style(color, parent)} />;
     case "video":
       return <OndemandVideoIcon style={style(color, parent)} />;
     case "material":

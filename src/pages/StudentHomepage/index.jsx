@@ -231,7 +231,7 @@ const StudentHomepage = () => {
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_SMALL) }}
         >
-          <Separator title="Other Subjects" />
+          <Separator title="Our Subjects" />
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
             <Dropdown
               options={dropdownClasses}
