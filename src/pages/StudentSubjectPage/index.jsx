@@ -19,6 +19,7 @@ import PublicNavbar from "../../components/PublicNavbar";
 import { useTheme } from "@material-ui/styles";
 import Dropdown from "../../components/Dropdown";
 import Chapter from "./Chapter";
+import PrivateNavbar from "../../components/PrivateNavbar";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -74,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const subject = {
+  id: "1",
   title: "Mathematics",
   description:
     "Mathematics is the study of topics such as quantity, structure, space, and change.",
@@ -133,7 +135,7 @@ const StudentSubjectPage = () => {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>My Subjects</title>
+        <title>{subject.title}</title>
       </Helmet>
       <Modal
         open={open}
@@ -157,7 +159,7 @@ const StudentSubjectPage = () => {
       >
         {/* Navbar */}
         <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
-          <PublicNavbar />
+          <PrivateNavbar />
         </Container>
 
         {/* Header stuff */}
@@ -244,9 +246,15 @@ const StudentSubjectPage = () => {
           style={{ marginTop: theme.spacing(0) }}
         >
           <div style={{ marginTop: theme.spacing(3) }}>
-            {subject.subjectChapters.map((subject, index) => (
-              <div key={index} style={{ marginTop: theme.spacing(2) }}>
-                <Chapter key={index} chapter={subject} />
+            {subject.subjectChapters.map((chapter, index) => (
+              <div
+                key={chapter.id}
+                onClick={() => {
+                  window.location.href = `/chapter/${chapter.id}`;
+                }}
+                style={{ marginTop: theme.spacing(2) }}
+              >
+                <Chapter key={index} chapter={chapter} />
               </div>
             ))}
           </div>

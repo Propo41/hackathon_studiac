@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const subject = {
-  id: "3",
+  id: "1",
   title: "Программирование",
   shortDescription:
     "Blockquotes can contain other Markdown formatted elements. Not all elements can be used — you’ll need to experiment to see which ones work",
@@ -214,22 +214,25 @@ const subject = {
   ],
 };
 
-const SubjectsDetailsPage = () => {
+const SubjectsDetailsPagePrivate = () => {
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width: 942px)");
 
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth",
-  });
+  // smooth scroll to top with animation
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+  scrollToTop();
 
   return (
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{subject.title}</title>
+        <title>Subject Details</title>
       </Helmet>
       <Box
         sx={{
@@ -239,13 +242,14 @@ const SubjectsDetailsPage = () => {
         }}
       >
         <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
-          <PublicNavbar />
+          <PrivateNavbar />
         </Container>
 
         {/* Header stuff */}
         <div className={classes.headerBackground}>
           <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
             <Header
+              id={subject.id}
               title={subject.title}
               shortDescription={subject.shortDescription}
               image={subject.image}
@@ -312,7 +316,7 @@ const SubjectsDetailsPage = () => {
           <div style={{ marginTop: theme.spacing(5) }}>
             {/* map rows */}
             <Grid container spacing={3} alignItems="flex-end">
-              {subject.featuredSubjects.map((subject) => (
+              {subject.featuredSubjects.map((subject, index) => (
                 <Grid item key={subject.id} xs={12} sm={6} md={4}>
                   <SubjectFeatured
                     id={subject.id}
@@ -351,4 +355,4 @@ const SubjectsDetailsPage = () => {
   );
 };
 
-export default SubjectsDetailsPage;
+export default SubjectsDetailsPagePrivate;

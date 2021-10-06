@@ -94,6 +94,7 @@ const palette = {
   purple: "#54499E",
   lightash: "#E8E9EB",
   lightash2: "#F5F7FA",
+  red: "#D67979",
   navyblue: "#162874", // navyblue
   black: "#484848", // black
   orangelight: "#FFD27A", // orange-light

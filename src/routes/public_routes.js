@@ -11,6 +11,7 @@ import SignUpPage from "../pages/SignUpPage";
 import SetupProfilePage from "../pages/SetupProfilePage";
 import PaymentPage from "../pages/PaymentPage";
 import StudentChapterPage from "../pages/StudentChapterPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 export default function Router() {
   return useRoutes([
@@ -31,43 +32,20 @@ export default function Router() {
       element: <SignUpPage />,
     },
     {
-      path: "/student/profile",
-      element: <SetupProfilePage />,
-    },
-
-    {
-      path: "/lesson",
-      element: <StudentChapterPage />,
-    },
-    {
       path: "/subjects",
       element: <Subjects />,
     },
     {
-      path: "/subject/subjectId",
+      path: "/subject/:subjectId",
       element: <SubjectsDetailsPage />,
     },
     {
-      path: "/student/home",
-      element: <StudentHomepage />,
+      path: "/not-found",
+      element: <NotFoundPage />,
     },
-    {
-      path: "/student/subjects",
-      element: <StudentMySubjectsPage />,
-    },
-    {
-      path: "/payment",
-      element: <PaymentPage />,
-    },
-
-    {
-      path: "/student/subject",
-      element: <StudentSubjectPage />,
-    },
-
     {
       path: "*",
-      element: <Navigate to="/error" replace />,
+      element: <Navigate to="/not-found" replace />,
     },
   ]);
 }

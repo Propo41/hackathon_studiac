@@ -1,31 +1,23 @@
 import {
   Box,
   Container,
-  Link,
   Typography,
-  Hidden,
-  Grid,
   makeStyles,
   Button,
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-  Avatar,
-  CardMedia,
+  Link,
 } from "@material-ui/core";
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import Footer from "../../components/Footer";
-import PublicNavbar from "../../components/PublicNavbar";
 import { useTheme } from "@material-ui/styles";
 import Separator from "../../components/Separator";
-import AvatarProfile from "../../components/AvatarProfile";
 import OurInstructors from "./OurInstructors";
 import AboutUs from "./AboutUs";
 import Header from "./Header";
 import OurSubjects from "./OurSubjects";
 import OurCommunity from "./OurCommunity";
+import PublicNavbar from "../../components/PublicNavbar";
+import { useNavigate } from "react-router";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -101,6 +93,7 @@ const tiers = [
     buttonText: "Learn More",
     buttonVariant: "outlined",
     icon: "https://i.pinimg.com/originals/01/ff/6e/01ff6e574c13777522d7a4d88c0a53a8.jpg",
+    navigateUrl: "/learn-more",
   },
   {
     title: "Pro",
@@ -114,6 +107,7 @@ const tiers = [
     buttonText: "Get Started",
     icon: "https://i.pinimg.com/originals/01/ff/6e/01ff6e574c13777522d7a4d88c0a53a8.jpg",
     buttonVariant: "contained",
+    navigateUrl: "/sign-up",
   },
   {
     title: "Enterprise",
@@ -126,29 +120,34 @@ const tiers = [
     icon: "https://i.pinimg.com/originals/01/ff/6e/01ff6e574c13777522d7a4d88c0a53a8.jpg",
     buttonText: "Contact Us",
     buttonVariant: "outlined",
+    navigateUrl: "/contact-us",
   },
 ];
 
 const instructors = [
   {
+    id: "1",
     title: "Mia Malkova",
     body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo",
     image:
       "https://img.mensxp.com/media/content/2017/Nov/image-4-pinterest-1510066942.jpg",
   },
   {
+    id: "2",
     title: "Danny Daniels",
     body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo",
     image:
       "https://www.allkpop.com/upload/2021/09/content/301504/1633028697-untitled-1.jpg",
   },
   {
+    id: "3",
     title: "Soung Pho",
     body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo",
     image:
       "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/squid-game-1632309278.jpg",
   },
   {
+    id: "4",
     title: "Min Mu",
     body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo",
     image: "https://pbs.twimg.com/media/FAela2EVUAImJks.jpg",
@@ -157,6 +156,7 @@ const instructors = [
 
 const subjects = [
   {
+    id: "1",
     title: "Программирование",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image:
@@ -165,6 +165,7 @@ const subjects = [
     category: "Программирование",
   },
   {
+    id: "2",
     title: "Программирование",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image:
@@ -173,6 +174,7 @@ const subjects = [
     category: "Программирование",
   },
   {
+    id: "3",
     title: "Программирование",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image:
@@ -209,6 +211,8 @@ const community = [
 const LandingPage = () => {
   const theme = useTheme();
   const classes = useStyles();
+  const navigate = useNavigate();
+
   return (
     <>
       <Helmet>
@@ -303,7 +307,9 @@ const LandingPage = () => {
                 borderColor: theme.palette.navyblue,
               }}
             >
-              Explore All
+              <Link href="/subjects" style={{ textDecoration: "none" }}>
+                Explore All
+              </Link>
             </Button>
           </Container>
         </div>
@@ -339,7 +345,9 @@ const LandingPage = () => {
             }}
           >
             <Typography variant="h2" style={{ color: theme.palette.navyblue }}>
-              Join Us Now
+              <Link href="/sign-up" style={{ textDecoration: "none" }}>
+                Join Us Now
+              </Link>
             </Typography>
             <Typography
               variant="h5"
@@ -361,7 +369,9 @@ const LandingPage = () => {
                 marginTop: theme.spacing(6),
               }}
             >
-              Join For Free
+              <Link href="/sign-up" style={{ textDecoration: "none" }}>
+                Join For Free
+              </Link>
             </Button>
           </Container>
         </div>

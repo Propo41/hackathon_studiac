@@ -20,6 +20,7 @@ import Dropdown from "../../components/Dropdown";
 import TextInputLayout from "../../components/TextInputLayout";
 import SubjectFeatured from "../../components/SubjectFeatured";
 import MarkdownViewer from "../../components/MarkdownViewer";
+import PrivateNavbar from "../../components/PrivateNavbar";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -118,7 +119,7 @@ const PaymentPage = () => {
       >
         {/* Navbar */}
         <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
-          <PublicNavbar />
+          <PrivateNavbar />
         </Container>
 
         {/* Header stuff */}

@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Label from "../Label";
 import Dropdown from "../Dropdown";
+import { useNavigate } from "react-router";
 
 const useStyles = makeStyles({
   root: {
@@ -40,9 +41,17 @@ const useStyles = makeStyles({
  */
 export default function Subject(props) {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   return (
-    <Card className={classes.root} elevation={0}>
+    <Card
+      className={classes.root}
+      elevation={0}
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(`/subject/${props.id}`);
+      }}
+    >
       <CardMedia
         component="img"
         alt={props.title}

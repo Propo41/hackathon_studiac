@@ -93,6 +93,8 @@ function SignUpPage() {
                     email: data.get("email"),
                     password: data.get("password"),
                   }); */
+
+    window.location.replace("/sign-in");
   };
 
   return (

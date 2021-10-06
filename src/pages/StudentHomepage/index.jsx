@@ -21,6 +21,8 @@ import ExpandableList from "../../components/ExpandableList";
 import Label from "../../components/Label";
 import iconMapper from "../../utils/icon_mapper";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
+import PrivateNavbar from "../../components/PrivateNavbar";
+import { useNavigate } from "react-router";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -104,6 +106,7 @@ const useStyles2 = makeStyles((theme) => ({
 
 const subjects = [
   {
+    id: "1",
     title: "Программирование",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image: "https://picsum.photos/200/300",
@@ -114,6 +117,7 @@ const subjects = [
     },
   },
   {
+    id: "2",
     title: "Программирование",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image: "https://picsum.photos/200/300",
@@ -124,6 +128,7 @@ const subjects = [
     },
   },
   {
+    id: "3",
     title: "Программирование",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image: "https://picsum.photos/200/300",
@@ -134,6 +139,7 @@ const subjects = [
     },
   },
   {
+    id: "4",
     title: "Программирование",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image: "https://picsum.photos/200/300",
@@ -167,6 +173,7 @@ const dropdownClasses = [
 ];
 
 const userRecentWatch = {
+  chapterId: "1",
   lessonTitle: "03. Lesson Name",
   lessonImage: "https://picsum.photos/seed/picsum/200/300",
   category: {
@@ -185,7 +192,7 @@ const StudentHomepage = () => {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Subjects</title>
+        <title>Home</title>
       </Helmet>
       <Box
         sx={{
@@ -195,7 +202,7 @@ const StudentHomepage = () => {
         }}
       >
         <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
-          <PublicNavbar />
+          <PrivateNavbar />
         </Container>
 
         {/* Header stuff */}
@@ -256,9 +263,11 @@ const StudentHomepage = () => {
 function ContinueWatching({ userRecentWatch }) {
   const classes = useStyles2();
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const onRecentVideoClick = () => {
     console.log("Clicked");
+    navigate(`chapter/${userRecentWatch.chapterId}`);
   };
 
   return (

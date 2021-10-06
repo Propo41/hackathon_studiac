@@ -11,6 +11,8 @@ import { Link } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
+import LogoutComponent from "../LogoutComponent";
+import { Avatar } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,9 +83,22 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 0.1rem",
     padding: "0.5rem 1rem",
   },
+
+  logoutContainer: {
+    justifyItems: "center",
+    display: "grid",
+    padding: "1rem 3rem",
+  },
 }));
 
-const PublicNavbar = () => {
+const userInfo = {
+  name: "Ahnaf",
+  email: "ahnaf@aust.ecom",
+  image:
+    "https://avatars3.githubusercontent.com/u/52709853?s=460&u=f9f8b8d8f9f8b8d8f9f8b8d8f9f8b8d8f9f8b8d8&v=4",
+};
+
+const PrivateNavbar = () => {
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -102,10 +117,11 @@ const PublicNavbar = () => {
     setAnchorEl(null);
   };
 
-  const handlePostJob = (e) => {
+  const handleLogOut = (e) => {
     e.stopPropagation();
     setAnchorEl(null);
-    navigate("/sign-in");
+    localStorage.removeItem("access_token");
+    window.location.href = "/";
   };
 
   return (
@@ -125,7 +141,13 @@ const PublicNavbar = () => {
               aria-label="menu"
               onClick={handleMenu}
             >
-              <MenuIcon style={{ width: "1.4em", height: "1.4em" }} />
+              <MenuIcon
+                style={{
+                  width: "1.4em",
+                  height: "1.4em",
+                  color: theme.palette.darkash,
+                }}
+              />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -142,71 +164,101 @@ const PublicNavbar = () => {
               open={open}
               onClose={handleClose}
             >
+              <div
+                style={{
+                  backgroundColor: theme.palette.lightash,
+                  borderTopLeftRadius: "10px",
+                  borderTopRightRadius: "10px",
+                }}
+              >
+                <div className={classes.logoutContainer}>
+                  <Avatar
+                    alt="company image"
+                    src={
+                      userInfo.profilePictureUrl
+                        ? userInfo.profilePictureUrl
+                        : "/assets/images/company_img_preview.svg"
+                    }
+                    className={classes.large}
+                  />
+                  <h1 className={classes.userInfoText}>{userInfo.name}</h1>
+                  <h1
+                    className={classes.userInfoText}
+                    style={{
+                      fontSize: "var(--font-size-dialog-content",
+                    }}
+                  >
+                    {userInfo.email}
+                  </h1>
+                </div>
+              </div>
               <MenuItem
                 onClick={handleClose}
-                style={{ backgroundColor: "transparent" }}
+                style={{
+                  backgroundColor: "transparent",
+                  textAlign: "center",
+                  justifyContent: "center",
+                }}
               >
-                <Link to="/subjects" className={classes.navbar}>
-                  <Typography variant="h2" className={classes.navbar}>
-                    Subjects
+                <Link to="/" className={classes.navbar}>
+                  <Typography variant="body1" className={classes.navbar}>
+                    Home
                   </Typography>
                 </Link>
               </MenuItem>
+
               <MenuItem
                 onClick={handleClose}
-                style={{ backgroundColor: "transparent" }}
+                style={{
+                  backgroundColor: "transparent",
+                  textAlign: "center",
+                  justifyContent: "center",
+                }}
               >
-                <Link to="/about" className={classes.navbar}>
-                  <Typography variant="h2" className={classes.navbar}>
-                    About
+                <Link to="/my-subjects" className={classes.navbar}>
+                  <Typography variant="body1" className={classes.navbar}>
+                    My Subjects
                   </Typography>
                 </Link>
               </MenuItem>
-              <MenuItem className="navbar-button" onClick={handlePostJob}>
-                POST A JOB
+
+              <MenuItem
+                className="navbar-button"
+                onClick={handleLogOut}
+                style={{
+                  backgroundColor: "transparent",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  color: theme.palette.red,
+                  fontSize: theme.typography.h6.fontSize,
+                  fontWeight: "bold",
+                }}
+              >
+                Logout
               </MenuItem>
             </Menu>
           </>
         ) : (
           <div className={classes.headerOptions}>
             <Button style={{ backgroundColor: "transparent" }}>
-              <Link className={classes.navbar} to="/subjects">
-                Subjects
+              <Link className={classes.navbar} to="/">
+                Home
               </Link>
             </Button>
             <Button style={{ backgroundColor: "transparent" }}>
-              <Link className={classes.navbar} to="/about">
-                About
+              <Link className={classes.navbar} to="/my-subjects">
+                My Subjects
               </Link>
             </Button>
 
-            {/* outlined button */}
             <div className={classes.rightToolbar}>
-              <Button
-                variant="outlined"
-                className={classes.buttonSecondary}
-                disableElevation
-              >
-                <Link
-                  to="/sign-up"
-                  style={{ textDecoration: "none", color: theme.palette.green }}
-                >
-                  Join for free
-                </Link>
-              </Button>
+              <LogoutComponent
+                avatar={userInfo.image}
+                name={userInfo.name}
+                email={userInfo.email}
+              />
             </div>
             {/* filled input */}
-            <div className={classes.rightToolbar}>
-              <Button
-                variant="contained"
-                className={classes.buttonPrimary}
-                disableElevation
-              >
-                <Link to="/sign-in" style={{ textDecoration: "none" }}>
-                  Login
-                </Link>
-              </Button>
-            </div>
           </div>
         )}
       </Toolbar>
@@ -214,4 +266,4 @@ const PublicNavbar = () => {
   );
 };
 
-export default PublicNavbar;
+export default PrivateNavbar;

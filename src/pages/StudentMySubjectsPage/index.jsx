@@ -15,6 +15,7 @@ import PublicNavbar from "../../components/PublicNavbar";
 import { useTheme } from "@material-ui/styles";
 import Dropdown from "../../components/Dropdown";
 import Subject from "./Subject";
+import PrivateNavbar from "../../components/PrivateNavbar";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -81,7 +82,8 @@ const useStyles = makeStyles((theme) => ({
 
 const subjects = [
   {
-    title: "Программирование",
+    id: "2",
+    title: "Subject 1",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image: "https://picsum.photos/200/300",
     category: {
@@ -90,17 +92,8 @@ const subjects = [
     },
   },
   {
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image: "https://picsum.photos/200/300",
-    category: {
-      name: "Class 1",
-      color: "#00C890",
-    },
-  },
-
-  {
-    title: "Программирование",
+    id: "2",
+    title: "Subject 2",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image: "https://picsum.photos/200/300",
     category: {
@@ -110,7 +103,19 @@ const subjects = [
   },
 
   {
-    title: "Программирование",
+    id: "3",
+    title: "Subject 3",
+    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
+    image: "https://picsum.photos/200/300",
+    category: {
+      name: "Class 1",
+      color: "#00C890",
+    },
+  },
+
+  {
+    id: "4",
+    title: "Subject 4",
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image: "https://picsum.photos/200/300",
     category: {
@@ -138,6 +143,13 @@ const dropdownClasses = [
 const StudentMySubjectsPage = () => {
   const theme = useTheme();
   const classes = useStyles();
+
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth",
+  });
+
   return (
     <>
       <Helmet>
@@ -153,7 +165,7 @@ const StudentMySubjectsPage = () => {
       >
         {/* Navbar */}
         <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
-          <PublicNavbar />
+          <PrivateNavbar />
         </Container>
 
         {/* Header stuff */}
@@ -186,9 +198,15 @@ const StudentMySubjectsPage = () => {
           </div>
 
           <div style={{ marginTop: theme.spacing(3) }}>
-            {subjects.map((subject, index) => (
-              <div style={{ marginTop: theme.spacing(2) }}>
-                <Subject key={index} subject={subject} />
+            {subjects.map((subject) => (
+              <div
+                style={{ marginTop: theme.spacing(2) }}
+                key={subject.id}
+                onClick={() => {
+                  window.location.href = `/my-subject/${subject.id}`;
+                }}
+              >
+                <Subject subject={subject} />
               </div>
             ))}
           </div>

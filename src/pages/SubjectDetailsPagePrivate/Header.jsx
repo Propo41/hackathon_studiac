@@ -106,7 +106,7 @@ const Header = (props) => {
           disableElevation
           style={{ marginTop: theme.spacing(2) }}
           onClick={() => {
-            navigate("/sign-in");
+            navigate("/payment");
           }}
         >
           Subscribe

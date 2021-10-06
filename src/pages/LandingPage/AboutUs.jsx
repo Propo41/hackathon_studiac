@@ -9,16 +9,24 @@ import {
   Typography,
   useTheme,
 } from "@material-ui/core";
+import { useNavigate } from "react-router";
 
 const AboutUs = (props) => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   return (
     <Grid container spacing={2} alignItems="flex-end">
       {props.tiers.map((tier) => (
         // Enterprise card is full width at sm breakpoint
         <Grid item key={tier.title} xs={12} sm={6} md={4}>
-          <Card elevation={0}>
+          <Card
+            elevation={0}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(tier.navigateUrl);
+            }}
+          >
             <div
               style={{
                 textAlign: "-webkit-center",

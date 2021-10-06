@@ -7,6 +7,7 @@ import {
   Typography,
   useTheme,
 } from "@material-ui/core";
+import { useNavigate } from "react-router";
 import Label from "../../components/Label";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,15 +32,17 @@ function Subject(props) {
   const classes = useStyles();
   const theme = useTheme();
   const { subject } = props;
+  const navigate = useNavigate();
 
   console.log(props);
 
-  const onSubjectClick = () => {
+  const onChapterClick = () => {
     console.log("subject Clicked");
+    navigate(`/my-subject/${subject.id}`);
   };
 
   return (
-    <Card className={classes.root} elevation={0} onClick={onSubjectClick}>
+    <Card className={classes.root} elevation={0} onClick={onChapterClick}>
       <CardMedia
         component="img"
         alt={subject.title}

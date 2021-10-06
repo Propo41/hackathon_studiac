@@ -10,10 +10,12 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import { CardActions } from "@material-ui/core";
 import Label from "../Label";
+import { useNavigate } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "inline-flex",
+    cursor: "pointer",
   },
   details: {
     display: "flex",
@@ -23,9 +25,9 @@ const useStyles = makeStyles((theme) => ({
     flex: "1 0 auto",
     paddingTop: 0,
   },
-  media:{
-    borderBottomLeftRadius: "inherit"
-  }
+  media: {
+    borderBottomLeftRadius: "inherit",
+  },
 }));
 
 /**
@@ -37,9 +39,17 @@ const useStyles = makeStyles((theme) => ({
  */
 export default function SubjectFeatured(props) {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   return (
-    <Card className={classes.root} elevation={0}>
+    <Card
+      className={classes.root}
+      elevation={0}
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(`/subject/${props.id}`);
+      }}
+    >
       <CardMedia
         component="img"
         alt={props.title}

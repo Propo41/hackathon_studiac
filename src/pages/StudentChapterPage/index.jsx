@@ -20,9 +20,7 @@ import PublicNavbar from "../../components/PublicNavbar";
 import { useTheme } from "@material-ui/styles";
 import Lesson from "./Lesson";
 import ReactPlayer from "react-player";
-import fileDownload from "js-file-download";
-import axios from "axios";
-import { useNavigate } from "react-router";
+import PrivateNavbar from "../../components/PrivateNavbar";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -187,7 +185,7 @@ const StudentChapterPage = () => {
       >
         {/* Navbar */}
         <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
-          <PublicNavbar />
+          <PrivateNavbar />
         </Container>
 
         {/* Header stuff */}

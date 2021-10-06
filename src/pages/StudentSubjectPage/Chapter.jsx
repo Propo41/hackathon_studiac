@@ -38,6 +38,7 @@ function Chapter(props) {
 
   const onSubjectClick = () => {
     console.log("subject Clicked");
+    
   };
 
   return (
