@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     marginRight: 50,
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("720")]: {
       flexGrow: 1,
     },
   },
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   rightToolbar: {
     display: "flex",
-    marginLeft: "auto",
+    // marginLeft: "auto",
   },
   navbar: {
     fontSize: theme.typography.h3.fontSize,
@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
 const PublicNavbar = () => {
   const theme = useTheme();
   const classes = useStyles();
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isMobile = useMediaQuery("(max-width: 720px)");
   // const mobileViewBreakpoint = useMediaQuery("(max-width: 599px)");
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -174,7 +174,9 @@ const PublicNavbar = () => {
                 Subjects
               </Link>
             </Button>
-            <Button style={{ backgroundColor: "transparent" }}>
+            <Button
+              style={{ backgroundColor: "transparent", marginRight: "auto" }}
+            >
               <Link className={classes.navbar} to="/about">
                 About
               </Link>

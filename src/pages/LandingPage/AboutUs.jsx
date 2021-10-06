@@ -16,7 +16,7 @@ const AboutUs = (props) => {
   const navigate = useNavigate();
 
   return (
-    <Grid container spacing={2} alignItems="flex-end">
+    <Grid container spacing={2} alignItems="flex-end" justifyContent="center">
       {props.tiers.map((tier) => (
         // Enterprise card is full width at sm breakpoint
         <Grid item key={tier.title} xs={12} sm={6} md={4}>

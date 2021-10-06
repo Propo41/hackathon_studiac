@@ -224,7 +224,7 @@ const StudentSubjectPage = () => {
                 >
                   <Typography
                     variant="h6"
-                    align="center"
+                    align="left"
                     style={{
                       textTransform: "none",
                     }}
