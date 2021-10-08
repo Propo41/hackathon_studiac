@@ -4,7 +4,7 @@ import Subject from "../../components/Subject";
 
 const OurSubjects = (props) => {
   return (
-    <Grid container spacing={2} alignItems="flex-end">
+    <Grid container spacing={2} alignItems="flex-end" justifyContent="center">
       {props.subjects.map((subject) => (
         <Grid item key={subject.id} xs={12} sm={6} md={4}>
           <Subject
