@@ -1,6 +1,7 @@
 import { filter } from "lodash";
 import { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { sentenceCase } from "change-case";
 // material
 import {
   Card,
@@ -21,19 +22,19 @@ import Label from "../components/Label";
 import Scrollbar from "../components/Scrollbar";
 import SearchNotFound from "../components/SearchNotFound";
 import {
-  ApplicantListHead,
-  ApplicantListToolbar,
-  ApplicantMoreMenu,
-} from "../components/applicant";
+  ReportListHead,
+  ReportListToolbar,
+  ReportMoreMenu,
+} from "../components/report";
 
 import { DELETE_AUTH, GET, GET_AUTH } from "../api/api";
 
 const TABLE_HEAD = [
-  { id: "name", label: "Name", alignRight: false },
-  { id: "contactEmail", label: "Email", alignRight: false },
-  { id: "contactPhone", label: "Phone", alignRight: false },
-  { id: "job", label: "Job", alignRight: false },
-  { id: "resume", label: "Resume", alignRight: false },
+  { id: "id", label: "Id", alignRight: false },
+  { id: "classname", label: "Class Name", alignRight: false },
+  { id: "colorCode", label: "Color Code", alignRight: false },
+  { id: "fee", label: "Fee", alignRight: false },
+  { id: "discount", label: "Discount", alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -71,38 +72,61 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Applicant(props) {
+const dummydata = [
+  {
+    id: 123,
+    classname: "ahnaf",
+    colorCode: "pagol",
+    fee: 500,
+    discount: 1000,
+  },
+  {
+    id: 124,
+    classname: "ahnaf",
+    colorCode: "pagol",
+    fee: 500,
+    discount: 1000,
+  },
+  {
+    id: 125,
+    classname: "ahnaf",
+    colorCode: "pagol",
+    fee: 500,
+    discount: 1000,
+  },
+];
+export default function Class_(props) {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState("contactEmail");
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [applicants, setApplicants] = useState([]);
+  const [reports, setReports] = useState(dummydata);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
-    const exe = async () => {
-      try {
-        const { data } = await GET_AUTH(`admin/applicants`);
-        if (isMounted) {
-          setApplicants(data);
-          console.log("all promises resolved");
-          console.log(data);
-          setLoading(false);
-        }
-      } catch (e) {
-        console.log(e);
-        console.log("error", e);
-        setLoading(false);
-      }
-    };
-    exe();
-    return () => {
-      isMounted = false;
-    }; // cleanup toggles value, if unmounted
-  }, []);
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   const exe = async () => {
+  //     try {
+  //       const { data } = await GET_AUTH(`admin/reports`);
+  //       if (isMounted) {
+  //         setReports(data);
+  //         console.log("all promises resolved");
+  //         console.log(data);
+  //         setLoading(false);
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //       console.log("error", e);
+  //       setLoading(false);
+  //     }
+  //   };
+  //   exe();
+  //   return () => {
+  //     isMounted = false;
+  //   }; // cleanup toggles value, if unmounted
+  // }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -112,7 +136,7 @@ export default function Applicant(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = applicants.map((n) => n.contactEmail);
+      const newSelecteds = reports.map((n) => n.contactEmail);
       setSelected(newSelecteds);
       return;
     }
@@ -151,22 +175,22 @@ export default function Applicant(props) {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - applicants.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reports.length) : 0;
 
-  const filteredApplicants = applySortFilter(
-    applicants,
+  const filteredReports = applySortFilter(
+    reports,
     getComparator(order, orderBy),
     filterName
   );
 
-  const isApplicantNotFound = filteredApplicants.length === 0;
+  const isReportNotFound = filteredReports.length === 0;
 
   if (loading) {
     return <h>Loading</h>;
   }
 
   return (
-    <Page title="Applicants | Admin">
+    <Page title="Reports | Admin">
       <Container>
         <Stack
           direction="row"
@@ -175,12 +199,12 @@ export default function Applicant(props) {
           mb={5}
         >
           <Typography variant="h4" gutterBottom>
-            Applicants
+            RECEIPTS
           </Typography>
         </Stack>
 
         <Card>
-          <ApplicantListToolbar
+          <ReportListToolbar
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
@@ -189,29 +213,21 @@ export default function Applicant(props) {
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <ApplicantListHead
+                <ReportListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={applicants.length}
+                  rowCount={reports.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredApplicants
+                  {filteredReports
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const {
-                        id,
-                        name,
-                        contactEmail,
-                        contactPhone,
-                        jobId,
-                        resumeUrl,
-                      } = row;
-                      const isItemSelected =
-                        selected.indexOf(contactEmail) !== -1;
+                      const { id, classname, colorCode, fee, discount } = row;
+                      const isItemSelected = selected.indexOf(id) !== -1;
 
                       return (
                         <TableRow
@@ -234,24 +250,17 @@ export default function Applicant(props) {
                                 noWrap
                                 style={{ marginLeft: "15px" }}
                               >
-                                {name}
+                                {id}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{contactEmail}</TableCell>
-                          <TableCell align="left">{contactPhone}</TableCell>
-                          <TableCell align="left">{jobId}</TableCell>
-                          <TableCell align="left">
-                            <a
-                              href={resumeUrl}
-                              rel="noreferrer"
-                              target="_blank"
-                            >
-                              Download
-                            </a>
-                          </TableCell>
+                          <TableCell align="left">{classname}</TableCell>
+                          <TableCell align="left">{colorCode}</TableCell>
+                          <TableCell align="left">{fee}</TableCell>
+                          <TableCell align="left">{discount}</TableCell>
+
                           <TableCell align="right">
-                            <ApplicantMoreMenu applicant={row} />
+                            <ReportMoreMenu report={row} />
                           </TableCell>
                         </TableRow>
                       );
@@ -262,7 +271,7 @@ export default function Applicant(props) {
                     </TableRow>
                   )}
                 </TableBody>
-                {isApplicantNotFound && (
+                {isReportNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -278,7 +287,7 @@ export default function Applicant(props) {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={applicants.length}
+            count={reports.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

@@ -23,7 +23,7 @@ const sidebarConfig = [
   },
   {
     title: "CONTRIBUTORS",
-    path: "/companies",
+    path: "/contributor",
     icon: getIcon(shoppingBagFill),
   },
   // {
@@ -33,22 +33,22 @@ const sidebarConfig = [
   // },
   {
     title: "SUBJECTS",
-    path: "/applicants",
+    path: "/subject",
     icon: getIcon(lockFill),
   },
   {
     title: "RECEIPTS",
-    path: "/reports",
+    path: "/receipt",
     icon: getIcon(alertTriangleFill),
   },
   {
     title: "ENROLLMENTS",
-    path: "/reports",
+    path: "/enrollment",
     icon: getIcon(alertTriangleFill),
   },
   {
     title: "CLASS",
-    path: "/reports",
+    path: "/class",
     icon: getIcon(alertTriangleFill),
   },
 ];

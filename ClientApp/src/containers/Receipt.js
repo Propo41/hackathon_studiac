@@ -1,18 +1,12 @@
 import { filter } from "lodash";
-import { Icon } from "@iconify/react";
-import { sentenceCase } from "change-case";
 import { useEffect, useState } from "react";
-import plusFill from "@iconify/icons-eva/plus-fill";
 import { Link as RouterLink } from "react-router-dom";
-import { makeStyles } from "@material-ui/styles";
+import { sentenceCase } from "change-case";
 // material
 import {
   Card,
   Table,
   Stack,
-  Avatar,
-  Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -21,30 +15,28 @@ import {
   TableContainer,
   TablePagination,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 // components
 import Page from "../components/Page";
 import Label from "../components/Label";
 import Scrollbar from "../components/Scrollbar";
 import SearchNotFound from "../components/SearchNotFound";
 import {
-  UserListHead,
-  UserListToolbar,
-  UserMoreMenu,
-} from "../components/user";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
-import USERS from "../_mocks_/user";
+  ReportListHead,
+  ReportListToolbar,
+  ReportMoreMenu,
+} from "../components/report";
+
 import { DELETE_AUTH, GET, GET_AUTH } from "../api/api";
-import CreateUserModal from "../components/CreateUserModal";
 
 const TABLE_HEAD = [
-  { id: "id", label: "Id", alignRight: false },
-  { id: "email", label: "Email", alignRight: false },
-  { id: "username", label: "Username", alignRight: false },
-  { id: "role", label: "Role", alignRight: false },
-  { id: "createdat", label: "Created at", alignRight: false },
-  { id: "isVerified", label: "Verified", alignRight: false },
+  { id: "id", label: "User Id", alignRight: false },
+  { id: "phoneNumber", label: "Phone Number", alignRight: false },
+  { id: "transactionId", label: "Transaction ID", alignRight: false },
+  { id: "paymentMethod", label: "Payment Method", alignRight: false },
+  { id: "amountSent", label: "Amount Sent", alignRight: false },
+  { id: "classname", label: "Class", alignRight: false },
+  { id: "status", label: "Status", alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -75,70 +67,59 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_user) => _user.email.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_user) =>
+        _user.contactEmail.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
 }
+
 const dummydata = [
   {
     id: 123,
-    email: "ahnaf@gmail.com",
-    username: "ahnaf",
-    role: "pagol",
-    createdat: "12/2/40",
-    isVerified: true,
+    phoneNumber: "ahnaf",
+    transacyionId: "pagol",
+    paymentMethod: "12/2/40",
+    amountSent: 100,
+    classname: 3,
+    status: true,
   },
   {
     id: 124,
-    email: "ahnaf@gmail.com",
-    username: "ahnaf",
-    role: "pagol",
-    createdat: "12/2/40",
-    isVerified: true,
+    phoneNumber: "ahnaf",
+    transacyionId: "pagol",
+    paymentMethod: "12/2/40",
+    amountSent: 100,
+    classname: 3,
+    status: false,
   },
   {
     id: 125,
-    email: "ahnaf@gmail.com",
-    username: "ahnaf",
-    role: "pagol",
-    createdat: "12/2/40",
-    isVerified: true,
+    phoneNumber: "ahnaf",
+    transacyionId: "pagol",
+    paymentMethod: "12/2/40",
+    amountSent: 100,
+    classname: 3,
+    status: true,
   },
 ];
-const useStyles = makeStyles((theme) => ({
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 6, 4),
-  },
-}));
-export default function User() {
-  const classes = useStyles();
+export default function Receipt(props) {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState("email");
+  const [orderBy, setOrderBy] = useState("contactEmail");
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [users, setUsers] = useState(dummydata);
+  const [reports, setReports] = useState(dummydata);
   const [loading, setLoading] = useState(false);
-  const [editUser, setEditUser] = useState(false);
-  const [open, setOpen] = useState(false);
 
   // useEffect(() => {
   //   let isMounted = true;
   //   const exe = async () => {
   //     try {
-  //       const { data } = await GET_AUTH(`admin/users`);
+  //       const { data } = await GET_AUTH(`admin/reports`);
   //       if (isMounted) {
-  //         setUsers(data);
+  //         setReports(data);
   //         console.log("all promises resolved");
   //         console.log(data);
   //         setLoading(false);
@@ -155,8 +136,6 @@ export default function User() {
   //   }; // cleanup toggles value, if unmounted
   // }, []);
 
-  //setUsers(dummydata);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -165,7 +144,7 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.email);
+      const newSelecteds = reports.map((n) => n.contactEmail);
       setSelected(newSelecteds);
       return;
     }
@@ -190,11 +169,6 @@ export default function User() {
     setSelected(newSelected);
   };
 
-  const onNewClick = () => {
-    console.log("Clicked");
-    setOpen(true);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -209,49 +183,22 @@ export default function User() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reports.length) : 0;
 
-  const filteredUsers = applySortFilter(
-    users,
+  const filteredReports = applySortFilter(
+    reports,
     getComparator(order, orderBy),
     filterName
   );
 
-  const isUserNotFound = filteredUsers.length === 0;
-
-  const onDeleteClick = async (id) => {
-    console.log(id);
-    console.log("on delete click");
-
-    try {
-      var formData = new FormData();
-      formData.append("id", id);
-      const { data } = await DELETE_AUTH(`admin/user`, formData);
-      console.log(data);
-      // setLoading(false);
-    } catch (e) {
-      console.log(e);
-      console.log("error", e);
-      // setLoading(false);
-    }
-  };
-
-  const onEditClick = async (id) => {
-    console.log("on edit click");
-    console.log(id);
-    setEditUser(true);
-  };
+  const isReportNotFound = filteredReports.length === 0;
 
   if (loading) {
     return <h>Loading</h>;
   }
 
-  if (editUser) {
-    return <h1>Edit</h1>;
-  }
-
   return (
-    <Page title="User | Admin">
+    <Page title="Reports | Admin">
       <Container>
         <Stack
           direction="row"
@@ -260,21 +207,12 @@ export default function User() {
           mb={5}
         >
           <Typography variant="h4" gutterBottom>
-            User
+            RECEIPTS
           </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="#"
-            startIcon={<Icon icon={plusFill} />}
-            onClick={onNewClick}
-          >
-            New User
-          </Button>
         </Stack>
 
         <Card>
-          <UserListToolbar
+          <ReportListToolbar
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
@@ -283,28 +221,29 @@ export default function User() {
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <ReportListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={users.length}
+                  rowCount={reports.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers
+                  {filteredReports
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const {
                         id,
-                        email,
-                        username,
-                        role,
-                        createdat,
-                        isVerified,
+                        phoneNumber,
+                        transacyionId,
+                        paymentMethod,
+                        amountSent,
+                        classname,
+                        status,
                       } = row;
-                      const isItemSelected = selected.indexOf(email) !== -1;
+                      const isItemSelected = selected.indexOf(id) !== -1;
 
                       return (
                         <TableRow
@@ -316,7 +255,6 @@ export default function User() {
                           aria-checked={isItemSelected}
                         >
                           <TableCell padding="checkbox"></TableCell>
-                          <TableCell align="left">{id}</TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack
                               direction="row"
@@ -328,29 +266,28 @@ export default function User() {
                                 noWrap
                                 style={{ marginLeft: "15px" }}
                               >
-                                {email}
+                                {id}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{username}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{createdat}</TableCell>
+                          <TableCell align="left">{phoneNumber}</TableCell>
+                          <TableCell align="left">{transacyionId}</TableCell>
+                          <TableCell align="left">{paymentMethod}</TableCell>
+                          <TableCell align="left">{amountSent}</TableCell>
+                          <TableCell align="left">{classname}</TableCell>
+
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color={
-                                (isVerified === false && "error") || "success"
-                              }
+                              color={(status === false && "error") || "success"}
                             >
-                              {sentenceCase(isVerified === true ? "Yes" : "No")}
+                              {sentenceCase(
+                                status === true ? "Approved" : "Not Approved"
+                              )}
                             </Label>
                           </TableCell>
                           <TableCell align="right">
-                            <UserMoreMenu
-                              onDeleteClick={onDeleteClick}
-                              onEditClick={onEditClick}
-                              id={id}
-                            />
+                            <ReportMoreMenu report={row} />
                           </TableCell>
                         </TableRow>
                       );
@@ -361,7 +298,7 @@ export default function User() {
                     </TableRow>
                   )}
                 </TableBody>
-                {isUserNotFound && (
+                {isReportNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -377,7 +314,7 @@ export default function User() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={users.length}
+            count={reports.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -385,29 +322,6 @@ export default function User() {
           />
         </Card>
       </Container>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={() => {
-          setOpen(false);
-        }}
-        onClick={(event) => event.stopPropagation()}
-        onFocus={(event) => event.stopPropagation()}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        hideBackdrop={false}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <div>
-            <CreateUserModal />
-          </div>
-        </Fade>
-      </Modal>
     </Page>
   );
 }

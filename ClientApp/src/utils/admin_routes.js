@@ -3,9 +3,11 @@ import { Navigate, useRoutes } from "react-router-dom";
 import DashboardLayout from "../components/layouts/index";
 import DashboardApp from "../containers/DashboardApp";
 import User from "../containers/User";
-import Applicant from "../containers/Applicant";
-import Report from "../containers/Report";
-import Company from "../containers/Company";
+import Subject from "../containers/Subject";
+import Receipt from "../containers/Receipt";
+import Contributor from "../containers/Contributor";
+import Enrollment from "../containers/Enrollment";
+import Class_ from "../containers/Class_";
 
 export default function Router() {
   return useRoutes([
@@ -16,10 +18,12 @@ export default function Router() {
         { path: "/", element: <Navigate to="/dashboard" replace /> },
         { path: "/dashboard", element: <DashboardApp /> },
         { path: "users", element: <User /> },
-        { path: "companies", element: <Company /> },
+        { path: "contributor", element: <Contributor /> },
         { path: "job-posts", element: <User /> },
-        { path: "applicants", element: <Applicant /> },
-        { path: "reports", element: <Report /> },
+        { path: "subject", element: <Subject /> },
+        { path: "receipt", element: <Receipt /> },
+        { path: "enrollment", element: <Enrollment /> },
+        { path: "class", element: <Class_ /> },
       ],
     },
     {
