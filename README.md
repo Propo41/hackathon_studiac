@@ -1,6 +1,30 @@
-# Getting Started with Create React App
+# Installation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+To run the project, enter the following command
+```bash
+npm install
+cd server
+npm install
+cd ..
+npm run dev
+```
+
+## Build Scripts
+
+Server side rendering is being used in this project. All react files are served from the backend server.
+
+```bash
+# creates a build folder and starts the server
+npm run dev 
+
+# runs the react application only
+npm run client
+
+# runs the server only
+npm run server
+```
+
+
 
 ## Day 1: 3rd Oct
 
