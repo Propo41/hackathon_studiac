@@ -95,8 +95,8 @@ const Header = (props) => {
 
         <div style={{ marginTop: theme.spacing(2) }}>
           <Label
-            text={props.category.name}
-            color={props.category.color}
+            text={props.categoryName}
+            color={props.categoryColor}
             icon="bookmark"
           />
         </div>
@@ -113,7 +113,10 @@ const Header = (props) => {
         </Button>
       </Grid>
       <Grid item xs={12} md={4} lg={4}>
-        <SubscribePrice price={props.subscriptionFee} />
+        <SubscribePrice
+          price={props.subscriptionFee}
+          discount={props.subscriptionDiscount}
+        />
       </Grid>
     </Grid>
   );
@@ -144,13 +147,50 @@ const SubscribePrice = (props) => {
             Subscription Monthly
           </Typography>
         </Box>
-        <Typography
-          variant="h1"
-          align="center"
-          style={{ color: theme.palette.green, marginTop: theme.spacing(1) }}
-        >
-          {"৳" + props.price}
-        </Typography>
+
+        {/* if discount exists */}
+        {props.discount && props.price >= props.discount && (
+          <>
+            {/* new price after discount */}
+            <Typography
+              variant="h1"
+              align="center"
+              style={{
+                color: theme.palette.green,
+                marginTop: theme.spacing(1),
+              }}
+            >
+              {"৳" + (props.price - props.discount)}
+            </Typography>
+            {/* old price */}
+            <Typography
+              variant="h2"
+              align="center"
+              style={{
+                color: theme.palette.darkash,
+                marginTop: theme.spacing(1),
+                textDecoration: "line-through",
+              }}
+            >
+              {"৳" + props.price}
+            </Typography>
+          </>
+        )}
+
+        {/* if no discount present */}
+        {!props.discount ||
+          (props.price < props.discount && (
+            <Typography
+              variant="h1"
+              align="center"
+              style={{
+                color: theme.palette.green,
+                marginTop: theme.spacing(1),
+              }}
+            >
+              {"৳" + props.price}
+            </Typography>
+          ))}
 
         <Typography
           variant="body1"

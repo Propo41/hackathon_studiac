@@ -120,7 +120,7 @@ const PrivateNavbar = () => {
   const handleLogOut = (e) => {
     e.stopPropagation();
     setAnchorEl(null);
-    localStorage.removeItem("access_token");
+    localStorage.removeItem("x-studiac-access-token");
     window.location.href = "/";
   };
 

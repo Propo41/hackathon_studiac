@@ -9,6 +9,7 @@ import {
   CardMedia,
   CardContent,
   useMediaQuery,
+  CircularProgress,
 } from "@material-ui/core";
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
@@ -23,6 +24,9 @@ import MarkdownViewer from "../../components/MarkdownViewer";
 import SubjectFeatured from "../../components/SubjectFeatured";
 import SubjectCreators from "./SubjectCreators";
 import PrivateNavbar from "../../components/PrivateNavbar";
+import { useQuery } from "@apollo/client";
+import { SUBJECT_DETAILS } from "../../graphql/queries";
+import { useParams } from "react-router";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -90,126 +94,119 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const subject = {
+var subject = {
   id: "3",
   title: "Программирование",
   shortDescription:
     "Blockquotes can contain other Markdown formatted elements. Not all elements can be used — you’ll need to experiment to see which ones work",
-  overview: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi gravida dui, fermentum suspendisse nibh. Sagittis sagittis hendrerit porttitor est in sit in risus. Adipiscing tortor morbi aliquet sed lacus. Nibh scelerisque porta ut donec. Pulvinar cursus convallis egestas in eleifend. Porta pellentesque dapibus eu euismod. Vestibulum dui nibh non convallis rhoncus. Sociis ullamcorper ut tincidunt massa dignissim nisi massa nunc. Posuere netus pharetra tristique nisl, suspendisse et. Sem purus sed donec odio id nam quam metus et. Commodo, aliquet risus a, eget. Ac tristique in varius et ipsum id velit. 
-
-  Viverra eget 
-  leo diam imperdiet. Sed habitant a neque, mollis vel proin id. Mauris pulvinar diam pellentesque varius pellentesque lectus tempus tempus placerat. Euismod vitae sed diam nullam laoreet non nibh enim odio. Neque aliquam ipsum amet etiam volutpat ultrices eget pulvinar. Venenatis congue suspendisse ut tempor sapien imperdiet. In nibh nisi ut pretium nisi sit pharetra tellus. Turpis pharetra sagittis curabitur purus donec urna elementum laoreet. 
-  
-  Porttitor quam eu, 
-  mattis ornare sagittis, 
-  lorem. In integer 
-  
-  in blandit dolor. Amet, nunc, donec lectus consequat metus, tortor in odio sed. Turpis et massa, nascetur et vulputate etiam vivamus blandit. Nulla lacinia magnis dapibus nunc, eget pretium quis imperdiet. Ac sed arcu nunc iaculis. Viverra praesent volutpat lorem venenatis. Habitasse cras ipsum ornare non mi ut tellus netus. Felis nec semper tempor viverra nec facilisi ultrices gravida.`,
+  overview: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi gravida dui, fermentum suspendisse nibh. Sagittis sagittis hendrerit porttitor est in sit in risus. Adipiscing tortor morbi aliquet sed lacus. Nibh scelerisque porta ut donec. Pulvinar cursus convallis egestas in eleifend. Porta pellentesque dapibus eu euismod. Vestibulum dui nibh non convallis rhoncus. Sociis ullamcorper ut tincidunt massa dignissim nisi massa nunc. Posuere netus pharetra tristique nisl, suspendisse et. Sem purus sed donec odio id nam quam metus et. Commodo, aliquet risus a, eget. Ac tristique in varius et ipsum id velit. `,
   image: "https://picsum.photos/seed/picsum/200/300",
   rating: 3,
-  category: {
+  Class: {
     name: "Class 1",
     color: "#ff0000",
+    Subjects: [
+      {
+        id: 13,
+        title: "Chemistry",
+        image: "https://picsum.photos/seed/picsum/200/300",
+        shortDescription:
+          "in blandit dolor. Amet, nunc, donec lectus consequat metus, tortor in odio sed. Turpis et massa, nascetur et vulputate etiam vivamus blandit. Nulla lacinia magnis dapibus nunc, eget pretium quis imperdiet. Ac sed arcu nunc iaculis. Viverra praesent volutpat lorem venenatis. Habitasse cras ipsum ornare non mi ut tellus netus. Felis nec semper tempor viverra nec facilisi ultrices gravida",
+      },
+      {
+        id: 14,
+        title: "Chemistry",
+        image: "https://picsum.photos/seed/picsum/200/300",
+        shortDescription:
+          "in blandit dolor. Amet, nunc, donec lectus consequat metus, tortor in odio sed. Turpis et massa, nascetur et vulputate etiam vivamus blandit. Nulla lacinia magnis dapibus nunc, eget pretium quis imperdiet. Ac sed arcu nunc iaculis. Viverra praesent volutpat lorem venenatis. Habitasse cras ipsum ornare non mi ut tellus netus. Felis nec semper tempor viverra nec facilisi ultrices gravida",
+      },
+      {
+        id: 14,
+        title: "Chemistry",
+        image: "https://picsum.photos/seed/picsum/200/300",
+        shortDescription:
+          "in blandit dolor. Amet, nunc, donec lectus consequat metus, tortor in odio sed. Turpis et massa, nascetur et vulputate etiam vivamus blandit. Nulla lacinia magnis dapibus nunc, eget pretium quis imperdiet. Ac sed arcu nunc iaculis. Viverra praesent volutpat lorem venenatis. Habitasse cras ipsum ornare non mi ut tellus netus. Felis nec semper tempor viverra nec facilisi ultrices gravida",
+      },
+      {
+        id: 15,
+        title: "Chemistry",
+        image: "https://picsum.photos/seed/picsum/200/300",
+        shortDescription:
+          "in blandit dolor. Amet, nunc, donec lectus consequat metus, tortor in odio sed. Turpis et massa, nascetur et vulputate etiam vivamus blandit. Nulla lacinia magnis dapibus nunc, eget pretium quis imperdiet. Ac sed arcu nunc iaculis. Viverra praesent volutpat lorem venenatis. Habitasse cras ipsum ornare non mi ut tellus netus. Felis nec semper tempor viverra nec facilisi ultrices gravida",
+      },
+    ],
   },
-  subscriptionFee: 300,
-  syllabus: [
+  SubscriptionFee: {
+    fee: 100,
+    discount: 50,
+  },
+  Chapters: [
     {
       title: "Программирование",
-      lessons: [
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
+      Lessons: [
+        { type: "video", name: "Frozen yoghurt" },
+        { type: "video", name: "Frozen yoghurt" },
+        { type: "material", name: "Frozen yoghurt" },
+        { type: "video", name: "Frozen yoghurt" },
       ],
     },
 
     {
       title: "Программирование",
-      lessons: [
-        { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
+      Lessons: [
+        { type: "video", name: "Frozen yoghurt" },
+        { type: "video", name: "Frozen yoghurt" },
+        { type: "material", name: "Frozen yoghurt" },
+        { type: "video", name: "Frozen yoghurt" },
       ],
     },
 
     {
       title: "Программирование",
-      lessons: [
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
+      Lessons: [
+        { type: "video", name: "Frozen yoghurt" },
+        { type: "video", name: "Frozen yoghurt" },
+        { type: "material", name: "Frozen yoghurt" },
+        { type: "video", name: "Frozen yoghurt" },
       ],
     },
     {
       title: "Программирование",
-      lessons: [
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-        { type: "video", name: "Frozen yoghurt", duration: "45:00" },
+      Lessons: [
+        { type: "video", name: "Frozen yoghurt" },
+        { type: "video", name: "Frozen yoghurt" },
+        { type: "material", name: "Frozen yoghurt" },
+        { type: "video", name: "Frozen yoghurt" },
       ],
     },
   ],
-  featuredSubjects: [
+  SubjectContributors: [
     {
-      id: "1",
-      title: "Программирование",
-      shortDescription:
-        "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
-      image: "https://picsum.photos/seed/picsum/200/300",
+      Contributor: {
+        id: "Програfммированиеs",
+        name: "Программирование",
+        image: "https://picsum.photos/seed/picsum/200/300",
+        bio: "asdasd",
+        designation: "Instructor",
+      },
     },
     {
-      id: "2",
-      title: "Программирование",
-      shortDescription:
-        "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
-      image: "https://picsum.photos/seed/picsum/200/300",
+      Contributor: {
+        id: "Програfммированиеs",
+        name: "Программирование",
+        image: "https://picsum.photos/seed/picsum/200/300",
+        bio: "asdasd",
+        designation: "Instructor",
+      },
     },
     {
-      id: "3",
-      title: "Программирование",
-      shortDescription:
-        "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
-      image: "https://picsum.photos/seed/picsum/200/300",
-    },
-    {
-      id: "4",
-      title: "Программирование",
-      shortDescription:
-        "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
-      image: "https://picsum.photos/seed/picsum/200/300",
-    },
-  ],
-  subjectContributors: [
-    {
-      id: "Програfммированиеs",
-      name: "Программирование",
-      image: "https://picsum.photos/seed/picsum/200/300",
-      designation: "Instructor",
-      bio: "Blockquotes can contain other Markdown formatted elements. Not all elements can be used — you’ll need to experiment to see which ones work.",
-    },
-    {
-      id: "Программир3ованиеs",
-      name: "Программирование",
-      image: "https://picsum.photos/seed/picsum/200/300",
-      designation: "Instructor",
-      bio: "Blockquotes can contain other Markdown formatted elements. Not all elements can be used — you’ll need to experiment to see which ones work.",
-    },
-    {
-      id: "Программdированиеs",
-      name: "Программирование",
-      image: "https://picsum.photos/seed/picsum/200/300",
-      designation: "Instructor",
-      bio: "Blockquotes can contain other Markdown formatted elements. Not all elements can be used — you’ll need to experiment to see which ones work.",
-    },
-    {
-      id: "Программировsаниеs",
-      name: "Программирование",
-      image: "https://picsum.photos/seed/picsum/200/300",
-      designation: "Instructor",
-      bio: "Blockquotes can contain other Markdown formatted elements. Not all elements can be used — you’ll need to experiment to see which ones work.",
+      Contributor: {
+        id: "Програfммированиеs",
+        name: "Программирование",
+        image: "https://picsum.photos/seed/picsum/200/300",
+        bio: "asdasd",
+        designation: "Instructor",
+      },
     },
   ],
 };
@@ -218,6 +215,29 @@ const SubjectsDetailsPage = () => {
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width: 942px)");
+
+  // get url params
+  const { subjectId } = useParams();
+
+  const { loading, error, data } = useQuery(SUBJECT_DETAILS, {
+    variables: { subjectId: subjectId },
+  });
+
+  if (loading) {
+    return (
+      <div>
+        <CircularProgress />
+      </div>
+    );
+  }
+  if (error) {
+    return <div>Error</div>;
+  }
+
+  console.log(data.Subject_by_pk);
+  subject = data.Subject_by_pk;
+
+  console.log(data.Subject_by_pk);
 
   window.scrollTo({
     top: 0,
@@ -249,9 +269,11 @@ const SubjectsDetailsPage = () => {
               title={subject.title}
               shortDescription={subject.shortDescription}
               image={subject.image}
-              rating={subject.rating}
-              category={subject.category}
-              subscriptionFee={subject.subscriptionFee}
+              rating={0}
+              categoryName={subject.Class.name}
+              categoryColor={subject.Class.color}
+              subscriptionFee={subject.Class.SubscriptionFee.fee}
+              subscriptionDiscount={subject.Class.SubscriptionFee.discount}
             />
           </Container>
         </div>
@@ -286,12 +308,12 @@ const SubjectsDetailsPage = () => {
           </Typography>
           <div style={{ marginTop: theme.spacing(5) }}>
             {/* map rows */}
-            {subject.syllabus.map((row, index) => (
+            {subject.Chapters.map((row, index) => (
               <div key={index} style={{ marginTop: theme.spacing(1) }}>
                 <ExpandableList
                   title={row.title}
                   id={index}
-                  lessons={row.lessons}
+                  lessons={row.Lessons}
                   type="Syllabus"
                 />
               </div>
@@ -312,7 +334,7 @@ const SubjectsDetailsPage = () => {
           <div style={{ marginTop: theme.spacing(5) }}>
             {/* map rows */}
             <Grid container spacing={3} alignItems="flex-end">
-              {subject.featuredSubjects.map((subject) => (
+              {subject.Class.Subjects.map((subject) => (
                 <Grid item key={subject.id} xs={12} sm={6} md={4}>
                   <SubjectFeatured
                     id={subject.id}
@@ -338,7 +360,7 @@ const SubjectsDetailsPage = () => {
           </Typography>
 
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
-            <SubjectCreators creators={subject.subjectContributors} />
+            <SubjectCreators creators={subject.SubjectContributors} />
           </div>
         </Container>
 

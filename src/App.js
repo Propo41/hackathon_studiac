@@ -4,13 +4,8 @@ import PublicRouter from "./routes/public_routes";
 
 function App() {
   console.log(localStorage);
-  /*   return (
-    <ThemeConfig>
-      <PublicRouter />
-    </ThemeConfig>
-  ); */
 
-  if (localStorage.getItem("access_token") !== null) {
+  if (localStorage.getItem("x-studiac-access-token") !== null) {
     return (
       <ThemeConfig>
         <PrivateRouter />

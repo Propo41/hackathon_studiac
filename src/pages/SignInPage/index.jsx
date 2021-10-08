@@ -111,7 +111,7 @@ function SignInSide() {
       email: data.get("email"),
       password: data.get("password"),
     }); */
-    localStorage.setItem("access_token", "dummy_token");
+    localStorage.setItem("x-studiac-access-token", "dummy_token");
     window.location.href = "/";
   };
 

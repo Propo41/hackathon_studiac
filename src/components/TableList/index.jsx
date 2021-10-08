@@ -51,7 +51,8 @@ export default function TableList(props) {
     if (lessons) {
       // call createData function for each lesson
       const rows = lessons.map((lesson) => {
-        return createData(lesson.type, lesson.name, lesson.duration);
+        // todo: add duration to database and api
+        return createData(lesson.type, lesson.name, "");
       });
 
       return (

@@ -18,6 +18,8 @@ import OurSubjects from "./OurSubjects";
 import OurCommunity from "./OurCommunity";
 import PublicNavbar from "../../components/PublicNavbar";
 import { useNavigate } from "react-router";
+import { useQuery } from "@apollo/client";
+import { LANDING_PAGE } from "../../graphql/queries";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -124,7 +126,7 @@ const tiers = [
   },
 ];
 
-const instructors = [
+const contributors = [
   {
     id: "1",
     title: "Mia Malkova",
@@ -161,8 +163,10 @@ const subjects = [
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image:
       "https://img.mensxp.com/media/content/2017/Nov/image-2-pinterest-1510066907.jpg",
-    labelColor: "#00C890",
-    category: "Программирование",
+    Class: {
+      labelColor: "#00C890",
+      category: "Программирование",
+    },
   },
   {
     id: "2",
@@ -170,8 +174,10 @@ const subjects = [
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image:
       "https://media1.popsugar-assets.com/files/thumbor/JwAe7HTE4uBssC4-b9jHtKeVojg/fit-in/2048xorig/filters:format_auto-!!-:strip_icc-!!-/2018/09/25/543/n/2589278/346f343e5baa23c0ad0f38.84693216_/i/Who-Jodie-Comer.jpg",
-    labelColor: "#00C890",
-    category: "Программирование",
+    Class: {
+      labelColor: "#00C890",
+      category: "Программирование",
+    },
   },
   {
     id: "3",
@@ -179,8 +185,10 @@ const subjects = [
     body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
     image:
       "https://m.media-amazon.com/images/M/MV5BZDM2ZGU3NDgtZDUwNi00NjNmLTlkYjktNWU2ZTZmOTM3MjVlXkEyXkFqcGdeQWpnYW1i._V1_.jpg",
-    labelColor: "#00C890",
-    category: "Программирование",
+    Class: {
+      labelColor: "#00C890",
+      category: "Программирование",
+    },
   },
 ];
 
@@ -212,6 +220,17 @@ const LandingPage = () => {
   const theme = useTheme();
   const classes = useStyles();
   const navigate = useNavigate();
+  const { loading, error, data } = useQuery(LANDING_PAGE);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) {
+    console.log(error);
+    return <p>Error :(</p>;
+  }
+  const subjects = data.Subject;
+  const contributors = data.Contributor;
+
+  console.log(data);
 
   return (
     <>
@@ -264,7 +283,7 @@ const LandingPage = () => {
         >
           <Separator title="Our Instructors" />
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
-            <OurInstructors instructors={instructors} />
+            <OurInstructors instructors={contributors} />
           </div>
         </Container>
 

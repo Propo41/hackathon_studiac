@@ -12,8 +12,8 @@ const OurSubjects = (props) => {
             title={subject.title}
             body={subject.body}
             image={subject.image}
-            labelColor={subject.labelColor}
-            category={subject.category}
+            labelColor={subject.Class.labelColor}
+            category={subject.Class.category}
           />
         </Grid>
       ))}

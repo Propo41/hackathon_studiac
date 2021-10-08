@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import {
   Avatar,
   Button,
@@ -16,6 +17,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React from "react";
+import { CONTRIBUTOR_PROFILE } from "../../graphql/queries";
 import MarkdownViewer from "../MarkdownViewer";
 import SubjectInstructor from "../SubjectInstructor";
 
@@ -89,7 +91,6 @@ const AvatarProfile = (props) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
     console.log("Avatar clicked");
     setOpen(true);
   };
@@ -138,72 +139,84 @@ function AlertDialog(props) {
   // fetch user info from database using props.id
   console.log(props.id);
 
-  // const [user, setUser] = React.useState({});
-  const [loading, setLoading] = React.useState(false);
+  const { loading, error, data } = useQuery(CONTRIBUTOR_PROFILE, {
+    variables: { id: props.id },
+  });
 
-  const user = {
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error...</div>;
+  }
+
+  var user = {
     id: props.id,
     name: "John Doe",
     designation: "Software Engineer",
     bio: "tesque dapibus eu euismod. Vestibulum dui nibh non convallis rhoncus. Sociis ullamcorper ut tincidunt massa dignissim nisi massa nunc. Posuere netus pharetra tristique nisl, suspendis",
     image: "https://source.unsplash.com/random",
-    instructorContributions: [
+    SubjectContributors: [
       {
-        id: "1",
+        id: 1,
         title: "Introduction to Computer Science",
         image: "https://source.unsplash.com/random",
       },
       {
-        id: "2",
+        id: 2,
         title: "Introduction to Computer Science",
         image: "https://source.unsplash.com/random",
       },
       {
-        id: "3",
+        id: 3,
         title: "Introduction to Computer Science",
         image: "https://source.unsplash.com/random",
       },
     ],
   };
 
-  if (!loading) {
-    return (
-      <Dialog
-        open={props.open}
-        onClose={props.handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <div className={props.classes.dialogRoot}>
-          <Avatar
-            alt="User image"
-            className={props.classes.cover}
-            src={user.image}
-          />
-          <Typography
-            variant="h1"
-            style={{
-              color: theme.palette.navyblue,
-              marginTop: theme.spacing(1),
-            }}
-          >
-            {user.name}
-          </Typography>
+  user = data.Contributor_by_pk;
 
-          <Typography
-            variant="h4"
-            color="textPrimary"
-            style={{ marginTop: theme.spacing(1) }}
-          >
-            {user.designation}
-          </Typography>
+  console.log(user);
 
-          <Divider style={{ marginTop: theme.spacing(1) }} />
+  return (
+    <Dialog
+      open={props.open}
+      onClose={props.handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <div className={props.classes.dialogRoot}>
+        <Avatar
+          alt="User image"
+          className={props.classes.cover}
+          src={user.image}
+        />
+        <Typography
+          variant="h1"
+          style={{
+            color: theme.palette.navyblue,
+            marginTop: theme.spacing(1),
+          }}
+        >
+          {user.name}
+        </Typography>
 
-          <div style={{ marginTop: theme.spacing(2) }}>
-            <MarkdownViewer content={user.bio} />
-          </div>
+        <Typography
+          variant="h4"
+          color="textPrimary"
+          style={{ marginTop: theme.spacing(1) }}
+        >
+          {user.designation}
+        </Typography>
 
+        <Divider style={{ marginTop: theme.spacing(1) }} />
+
+        <div style={{ marginTop: theme.spacing(2) }}>
+          <MarkdownViewer content={user.bio} />
+        </div>
+
+        {user.SubjectContributors.length > 0 && (
           <Typography
             variant="h2"
             style={{
@@ -213,26 +226,26 @@ function AlertDialog(props) {
           >
             Other Contributions
           </Typography>
+        )}
 
-          <Grid
-            container
-            spacing={2}
-            alignItems="flex-end"
-            style={{ marginTop: theme.spacing(1) }}
-          >
-            {user.instructorContributions.map((subject, index) => (
-              <Grid item key={index} xs={12} sm={6} md={4}>
-                <SubjectInstructor
-                  title={subject.title}
-                  image={subject.image}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </div>
-      </Dialog>
-    );
-  }
+        <Grid
+          container
+          spacing={2}
+          alignItems="flex-end"
+          style={{ marginTop: theme.spacing(1) }}
+        >
+          {user.SubjectContributors.map((subject, index) => (
+            <Grid item key={index} xs={12} sm={6} md={4}>
+              <SubjectInstructor
+                title={subject.Subject.title}
+                image={subject.Subject.image}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+    </Dialog>
+  );
 }
 
 export default AvatarProfile;
