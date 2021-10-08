@@ -39,6 +39,4 @@ Compeleted the following front end implementations:
 
 
 # Packages Used
-- `dotnet add package GraphQL.Client --version 3.2.4`
-- `dotnet add package GraphQL.Client.Serializer.Newtonsoft --version 3.2.4`
-- 
+
