@@ -86,7 +86,7 @@ export default function Dropdown(props) {
           {selected}
         </Typography>
 
-        <KeyboardArrowDownIcon />
+        <KeyboardArrowDownIcon style={{ marginLeft: "auto" }} />
       </Paper>
 
       <Menu
