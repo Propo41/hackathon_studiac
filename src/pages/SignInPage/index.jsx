@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   createTheme,
   CssBaseline,
   FormControlLabel,
@@ -20,24 +21,9 @@ import { useTheme } from "@material-ui/core";
 import TextInputLayout from "../../components/TextInputLayout";
 import Separator from "../../components/Separator";
 import { useNavigate } from "react-router-dom";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      {/*  <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "} */}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import Alert from "../../components/AlertCustom";
+import { POST } from "../../api/api";
+import alertMaker from "../../utils/alertMaker";
 
 const useStyles = makeStyles((theme) => ({
   buttonPrimary: {
@@ -99,20 +85,39 @@ const useStyles = makeStyles((theme) => ({
 function SignInSide() {
   const theme = useTheme();
   const classes = useStyles();
-
+  const [alert, setAlert] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
+  const [input, setInput] = React.useState(null);
 
-  const handleSubmit = (event) => {
+  const onInputChange = (event) => {
+    const { value, name } = event.target;
+    setInput((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(event);
-    //const data = new FormData(event);
-    // eslint-disable-next-line no-console
-    /*  console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    }); */
-    localStorage.setItem("x-studiac-access-token", "dummy_token");
-    window.location.href = "/";
+    setIsLoading(true);
+    try {
+      const { data } = await POST("/auth/sign-in", input);
+      console.log(data);
+      setAlert(alertMaker(data));
+
+      if (data.status) {
+        setIsLoading(false);
+        console.log(data);
+        localStorage.setItem("x-studiac-access-token", data.token);
+        window.location.href = "/";
+      }
+    } catch (e) {
+      setAlert(alertMaker(e.response.data));
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -183,6 +188,9 @@ function SignInSide() {
             >
               Sign in
             </Typography>
+            <div style={{ textAlign: "center", marginTop: "10px" }}>
+              {isLoading && <CircularProgress />}
+            </div>
             <Box
               component="form"
               noValidate
@@ -190,13 +198,21 @@ function SignInSide() {
               sx={{ mt: 1 }}
             >
               <div style={{ marginTop: theme.spacing(2) }}>
-                <TextInputLayout name="Email" id="email" type="email" />
+                <TextInputLayout
+                  name="email"
+                  id="email"
+                  type="email"
+                  title="Email"
+                  onInputChange={onInputChange}
+                />
               </div>
               <div style={{ marginTop: theme.spacing(2) }}>
                 <TextInputLayout
-                  name="Password"
+                  name="password"
                   id="password"
                   type="password"
+                  title="Password"
+                  onInputChange={onInputChange}
                 />
               </div>
 
@@ -243,6 +259,14 @@ function SignInSide() {
                 >
                   Create an account
                 </Button>
+
+                {alert && (
+                  <Alert
+                    severity={alert.severity}
+                    title={alert.title}
+                    message={alert.message}
+                  />
+                )}
 
                 <Hidden smUp>
                   <Typography

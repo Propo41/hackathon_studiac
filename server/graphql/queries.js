@@ -3,10 +3,38 @@ const VIEW_USER_BY_EMAIL = `
         User(where: {role: {_eq: $role}, email: {_eq: $email}}) {
         email
         id
+        role
         username
         password
+     }
+    }
+`;
+
+const GET_ENROLLMENT_DATE = `
+    query FindEnrollment($userId: String!, $subjectId: Int!) {
+        Enrollment(where: {_and: {user_id: {_eq: $userId}, Class: {Subjects: {id: {_eq: $subjectId}}}}}) {
+        subscription_date
+        id
         }
     }
 `;
 
-export { VIEW_USER_BY_EMAIL };
+const GET_STUDENT_CHAPTERS = `
+    query GetStudentSubjectChapters($subjectId: Int!, $limit: Int = 1) {
+        Subject(where: {id: {_eq: $subjectId}}) {
+        id
+        title
+        short_description
+        overview
+        Chapters(order_by: {number: asc}, limit: $limit) {
+            id
+            title
+            image
+            description
+            number
+        }
+        }
+    }
+`;
+
+export { VIEW_USER_BY_EMAIL, GET_ENROLLMENT_DATE, GET_STUDENT_CHAPTERS };

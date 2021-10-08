@@ -40,7 +40,7 @@ const TextInputLayout = (props) => {
   return (
     <div>
       <Typography variant="h6" className={classes.label}>
-        {props.name}
+        {props.title}
       </Typography>
       <Paper component="form" className={classes.root} elevation={0}>
         <InputBase

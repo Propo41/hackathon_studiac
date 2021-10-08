@@ -52,4 +52,64 @@ const signInValidation = (req, res, next) => {
   });
 };
 
-export { signupValidation, signInValidation };
+const profileValidation = (req, res, next) => {
+  console.log(req.body);
+
+  const validationRule = {
+    fullName: "required|string",
+    phone: "required|size|max:11",
+    address: "required|string",
+    designation: "required|string",
+    class: "required|string",
+    dob: "required|date",
+    medium: "required|string",
+    institution: "required|string",
+  };
+
+  let validation = new Validator(req.body, validationRule);
+
+  validation.passes(() => {
+    next();
+  });
+
+  validation.fails((err) => {
+    res.status(412).send({
+      success: false,
+      message: "Validation failed. Please check your input!",
+      data: err,
+    });
+  });
+};
+
+const paymentValidation = (req, res, next) => {
+  console.log(req.body);
+
+  const validationRule = {
+    transactionId: "required|string|min:6",
+    phoneNumber: "required|string|size:11",
+    rawPrice: "required|integer",
+    discount: "required|integer",
+    classId: "required|integer",
+    paymentGateway: "required|string",
+  };
+
+  let validation = new Validator(req.body, validationRule);
+
+  validation.passes(() => {
+    next();
+  });
+
+  validation.fails((err) => {
+    res.status(412).send({
+      success: false,
+      message: "Validation failed. Please check your input!",
+      data: err,
+    });
+  });
+};
+export {
+  signupValidation,
+  signInValidation,
+  profileValidation,
+  paymentValidation,
+};

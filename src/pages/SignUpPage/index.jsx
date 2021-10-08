@@ -2,24 +2,29 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
-  createTheme,
-  CssBaseline,
-  FormControlLabel,
+  CircularProgress,
   Grid,
   Hidden,
   makeStyles,
-  MuiThemeProvider,
   Paper,
-  TextField,
   Typography,
 } from "@material-ui/core";
 import * as React from "react";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { useTheme } from "@material-ui/core";
 import TextInputLayout from "../../components/TextInputLayout";
-import Separator from "../../components/Separator";
 import { useNavigate } from "react-router-dom";
+import { POST } from "../../api/api";
+import Alert from "../../components/AlertCustom";
+import alertMaker from "../../utils/alertMaker";
+
+const signUpPageContent = {
+  title: "Lorem ipsum dolor sit amet",
+  subtitle: `
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+  eiusmod tempor incididunt ut labore et dolore magna aliqua ut
+  enim ad.`,
+};
 
 const useStyles = makeStyles((theme) => ({
   buttonPrimary: {
@@ -81,20 +86,41 @@ const useStyles = makeStyles((theme) => ({
 function SignUpPage() {
   const theme = useTheme();
   const classes = useStyles();
+  const [input, setInput] = React.useState(null);
+  const [alert, setAlert] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(event);
-    //const data = new FormData(event);
-    // eslint-disable-next-line no-console
-    /*  console.log({
-                    email: data.get("email"),
-                    password: data.get("password"),
-                  }); */
+    console.log(input);
+    setIsLoading(true);
+    try {
+      const data = await POST("/auth/sign-up", input);
+      console.log(data);
+      setAlert(alertMaker(data));
+      if (data.status) {
+        setIsLoading(false);
+        navigate("/sign-in");
+      }
+    } catch (e) {
+      setAlert(alertMaker(e.response.data));
+    }
 
-    window.location.replace("/sign-in");
+    setIsLoading(false);
+
+    // send http post request using axios
+
+    //window.location.replace("/sign-in");
+  };
+
+  const onInputChange = (event) => {
+    const { value, name } = event.target;
+    setInput((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   return (
@@ -126,7 +152,7 @@ function SignUpPage() {
                 style={{ color: theme.palette.navyblue }}
                 align="left"
               >
-                Lorem ipsum dolor sit amet
+                {signUpPageContent.title}
               </Typography>
               <Typography
                 variant="h5"
@@ -136,9 +162,7 @@ function SignUpPage() {
                   marginTop: theme.spacing(2),
                 }}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua ut
-                enim ad.
+                {signUpPageContent.subtitle}
               </Typography>
             </div>
           </Hidden>
@@ -165,6 +189,11 @@ function SignUpPage() {
             >
               Sign Up
             </Typography>
+
+            <div style={{ textAlign: "center", marginTop: "10px" }}>
+              {isLoading && <CircularProgress />}
+            </div>
+
             <Box
               component="form"
               noValidate
@@ -172,25 +201,41 @@ function SignUpPage() {
               sx={{ mt: 1 }}
             >
               <div style={{ marginTop: theme.spacing(2) }}>
-                <TextInputLayout name="Username" id="username" type="text" />
+                <TextInputLayout
+                  title="Username"
+                  name="username"
+                  id="username"
+                  type="text"
+                  onInputChange={onInputChange}
+                />
               </div>
-              <div style={{ marginTop: theme.spacing(2) }}>
-                <TextInputLayout name="Email" id="email" type="email" />
-              </div>
-
               <div style={{ marginTop: theme.spacing(2) }}>
                 <TextInputLayout
-                  name="Password"
-                  id="password"
-                  type="password"
+                  title="Email"
+                  name="email"
+                  id="email"
+                  type="email"
+                  onInputChange={onInputChange}
                 />
               </div>
 
               <div style={{ marginTop: theme.spacing(2) }}>
                 <TextInputLayout
-                  name="ConfirmPassword"
+                  title="Password"
+                  name="password"
                   id="password"
                   type="password"
+                  onInputChange={onInputChange}
+                />
+              </div>
+
+              <div style={{ marginTop: theme.spacing(2) }}>
+                <TextInputLayout
+                  title="ConfirmPassword"
+                  name="password_confirmation"
+                  id="password"
+                  type="password"
+                  onInputChange={onInputChange}
                 />
               </div>
 
@@ -237,6 +282,14 @@ function SignUpPage() {
                 >
                   Sign in with Google
                 </Button>
+
+                {alert && (
+                  <Alert
+                    severity={alert.severity}
+                    title={alert.title}
+                    message={alert.message}
+                  />
+                )}
 
                 <Hidden smUp>
                   <Typography

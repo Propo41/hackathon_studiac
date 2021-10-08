@@ -9,9 +9,12 @@ import {
   getLessonsController,
   paymentController,
 } from "../controllers/userController.js";
+import verifyToken from "../helpers/jwtMiddleware.js";
 import {
   signupValidation,
   signInValidation,
+  profileValidation,
+  paymentValidation,
 } from "../helpers/validationMiddleware.js";
 
 const router = express.Router();
@@ -21,10 +24,14 @@ router.post("/auth/sign-in", signInValidation, signInController);
 router.post("/auth/sign-up", signupValidation, signUpController);
 
 /* user routes */
-router.post("/user/create-profile", createProfileController);
-router.post("/user/payment", paymentController);
+router.post(
+  "/user/create-profile",
+  verifyToken,
+  profileValidation,
+  createProfileController
+);
+router.post("/user/payment", verifyToken, paymentValidation, paymentController);
 
-router.get("/user/get-chapters", getChaptersController);
-router.get("/user/get-lessons", getLessonsController);
+router.get("/user/get-chapters", verifyToken, getChaptersController);
 
 export default router;
