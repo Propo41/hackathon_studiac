@@ -123,7 +123,17 @@ const SetupProfilePage = () => {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <div style={{ marginTop: theme.spacing(1) }}>
-                <TextInputLayout name="Full Name" id="email" type="text" />
+                <TextInputLayout name="Full Name" id="name" type="text" />
+              </div>
+            </Grid>
+            <Grid item xs={12}>
+              <div style={{ marginTop: theme.spacing(1) }}>
+                <TextInputLayout name="Phone" id="phone" type="number" />
+              </div>
+            </Grid>
+            <Grid item xs={12}>
+              <div style={{ marginTop: theme.spacing(1) }}>
+                <TextInputLayout name="Address" id="address" type="text" />
               </div>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -131,13 +141,13 @@ const SetupProfilePage = () => {
                 <TextInputLayout
                   name="Designation"
                   id="designation"
-                  type="email"
+                  type="text"
                 />
               </div>
             </Grid>
             <Grid item xs={12} sm={6}>
               <div style={{ marginTop: theme.spacing(1) }}>
-                <TextInputLayout name="Class" id="class" type="email" />
+                <TextInputLayout name="Class" id="class" type="text" />
               </div>
             </Grid>
             <Grid item xs={12} sm={6}>
