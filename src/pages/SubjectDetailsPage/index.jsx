@@ -94,123 +94,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-var subject = {
-  id: "3",
-  title: "Программирование",
-  shortDescription:
-    "Blockquotes can contain other Markdown formatted elements. Not all elements can be used — you’ll need to experiment to see which ones work",
-  overview: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi gravida dui, fermentum suspendisse nibh. Sagittis sagittis hendrerit porttitor est in sit in risus. Adipiscing tortor morbi aliquet sed lacus. Nibh scelerisque porta ut donec. Pulvinar cursus convallis egestas in eleifend. Porta pellentesque dapibus eu euismod. Vestibulum dui nibh non convallis rhoncus. Sociis ullamcorper ut tincidunt massa dignissim nisi massa nunc. Posuere netus pharetra tristique nisl, suspendisse et. Sem purus sed donec odio id nam quam metus et. Commodo, aliquet risus a, eget. Ac tristique in varius et ipsum id velit. `,
-  image: "https://picsum.photos/seed/picsum/200/300",
-  rating: 3,
-  Class: {
-    name: "Class 1",
-    color: "#ff0000",
-    Subjects: [
-      {
-        id: 13,
-        title: "Chemistry",
-        image: "https://picsum.photos/seed/picsum/200/300",
-        shortDescription:
-          "in blandit dolor. Amet, nunc, donec lectus consequat metus, tortor in odio sed. Turpis et massa, nascetur et vulputate etiam vivamus blandit. Nulla lacinia magnis dapibus nunc, eget pretium quis imperdiet. Ac sed arcu nunc iaculis. Viverra praesent volutpat lorem venenatis. Habitasse cras ipsum ornare non mi ut tellus netus. Felis nec semper tempor viverra nec facilisi ultrices gravida",
-      },
-      {
-        id: 14,
-        title: "Chemistry",
-        image: "https://picsum.photos/seed/picsum/200/300",
-        shortDescription:
-          "in blandit dolor. Amet, nunc, donec lectus consequat metus, tortor in odio sed. Turpis et massa, nascetur et vulputate etiam vivamus blandit. Nulla lacinia magnis dapibus nunc, eget pretium quis imperdiet. Ac sed arcu nunc iaculis. Viverra praesent volutpat lorem venenatis. Habitasse cras ipsum ornare non mi ut tellus netus. Felis nec semper tempor viverra nec facilisi ultrices gravida",
-      },
-      {
-        id: 14,
-        title: "Chemistry",
-        image: "https://picsum.photos/seed/picsum/200/300",
-        shortDescription:
-          "in blandit dolor. Amet, nunc, donec lectus consequat metus, tortor in odio sed. Turpis et massa, nascetur et vulputate etiam vivamus blandit. Nulla lacinia magnis dapibus nunc, eget pretium quis imperdiet. Ac sed arcu nunc iaculis. Viverra praesent volutpat lorem venenatis. Habitasse cras ipsum ornare non mi ut tellus netus. Felis nec semper tempor viverra nec facilisi ultrices gravida",
-      },
-      {
-        id: 15,
-        title: "Chemistry",
-        image: "https://picsum.photos/seed/picsum/200/300",
-        shortDescription:
-          "in blandit dolor. Amet, nunc, donec lectus consequat metus, tortor in odio sed. Turpis et massa, nascetur et vulputate etiam vivamus blandit. Nulla lacinia magnis dapibus nunc, eget pretium quis imperdiet. Ac sed arcu nunc iaculis. Viverra praesent volutpat lorem venenatis. Habitasse cras ipsum ornare non mi ut tellus netus. Felis nec semper tempor viverra nec facilisi ultrices gravida",
-      },
-    ],
-  },
-  SubscriptionFee: {
-    fee: 100,
-    discount: 50,
-  },
-  Chapters: [
-    {
-      title: "Программирование",
-      Lessons: [
-        { type: "video", name: "Frozen yoghurt" },
-        { type: "video", name: "Frozen yoghurt" },
-        { type: "material", name: "Frozen yoghurt" },
-        { type: "video", name: "Frozen yoghurt" },
-      ],
-    },
-
-    {
-      title: "Программирование",
-      Lessons: [
-        { type: "video", name: "Frozen yoghurt" },
-        { type: "video", name: "Frozen yoghurt" },
-        { type: "material", name: "Frozen yoghurt" },
-        { type: "video", name: "Frozen yoghurt" },
-      ],
-    },
-
-    {
-      title: "Программирование",
-      Lessons: [
-        { type: "video", name: "Frozen yoghurt" },
-        { type: "video", name: "Frozen yoghurt" },
-        { type: "material", name: "Frozen yoghurt" },
-        { type: "video", name: "Frozen yoghurt" },
-      ],
-    },
-    {
-      title: "Программирование",
-      Lessons: [
-        { type: "video", name: "Frozen yoghurt" },
-        { type: "video", name: "Frozen yoghurt" },
-        { type: "material", name: "Frozen yoghurt" },
-        { type: "video", name: "Frozen yoghurt" },
-      ],
-    },
-  ],
-  SubjectContributors: [
-    {
-      Contributor: {
-        id: "Програfммированиеs",
-        name: "Программирование",
-        image: "https://picsum.photos/seed/picsum/200/300",
-        bio: "asdasd",
-        designation: "Instructor",
-      },
-    },
-    {
-      Contributor: {
-        id: "Програfммированиеs",
-        name: "Программирование",
-        image: "https://picsum.photos/seed/picsum/200/300",
-        bio: "asdasd",
-        designation: "Instructor",
-      },
-    },
-    {
-      Contributor: {
-        id: "Програfммированиеs",
-        name: "Программирование",
-        image: "https://picsum.photos/seed/picsum/200/300",
-        bio: "asdasd",
-        designation: "Instructor",
-      },
-    },
-  ],
-};
-
 const SubjectsDetailsPage = () => {
   const theme = useTheme();
   const classes = useStyles();
@@ -235,7 +118,7 @@ const SubjectsDetailsPage = () => {
   }
 
   console.log(data.Subject_by_pk);
-  subject = data.Subject_by_pk;
+  const subject = data.Subject_by_pk;
 
   console.log(data.Subject_by_pk);
 
