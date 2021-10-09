@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ConfirmSubjectForm = () => {
+const ConfirmSubjectForm = (props) => {
   const classes = useStyles();
   const { control } = useFormContext();
   return (
@@ -52,7 +52,7 @@ const ConfirmSubjectForm = () => {
           variant="contained"
           fullWidth={true}
           className={classes.buttonOrange}
-          // onClick={onClickConfirm}
+          onClick={props.onSubmitClick}
         >
           COMPLETE CREATING THE SUBJECT
         </Button>

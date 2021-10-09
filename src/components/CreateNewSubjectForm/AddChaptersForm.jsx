@@ -87,25 +87,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const onInputChange = (event) => {
-//   const { value, name } = event.target;
-//   setFormInput((prevState) => ({
-//     ...prevState,
-//     [name]: value,
-//   }));
-
-//   console.log(form);
-// };
-
-const AddChaptersForm = () => {
+const AddChaptersForm = (props) => {
   const classes = useStyles();
   const { control } = useFormContext();
 
   const [form, setFormInput] = useState(null);
   const [openVideo, setOpenVideo] = useState(false);
   const [openMaterial, setOpenMaterial] = useState(false);
-  const [chapters, setChapters] = useState("");
-  const [lessons, setLessons] = useState("");
+  const [chapters, setChapters] = useState([]);
+  const [lessons, setLessons] = useState([]);
+
+  var lessonNumber = 1;
 
   const onClickAddMaterial = () => {
     setOpenMaterial(true);
@@ -117,20 +109,34 @@ const AddChaptersForm = () => {
 
   const onClickAddChapter = () => {
     console.log(form);
-    const newChapters = [...chapters, form];
+    const chap = {
+      info: form,
+      lessons,
+    };
+    const newChapters = [...chapters, chap];
     setChapters(newChapters);
+    console.log("chapters: ");
+    console.log(chapters);
+    setLessons([]);
+    lessonNumber = 1;
+
+    props.setChapters(chapters);
   };
 
   const addVideo = (video) => {
     console.log(video);
+    video.number = lessonNumber;
     const newLessons = [...lessons, video];
     setLessons(newLessons);
+    lessonNumber++;
   };
 
   const addMaterial = (material) => {
     console.log(material);
+    material.number = lessonNumber;
     const newLessons = [...lessons, material];
     setLessons(newLessons);
+    lessonNumber++;
   };
 
   const onInputChange = (event) => {
@@ -139,6 +145,8 @@ const AddChaptersForm = () => {
       ...prevState,
       [name]: value,
     }));
+
+    // props.setChapters(form);
   };
 
   const handleClose = () => {
@@ -153,6 +161,7 @@ const AddChaptersForm = () => {
           icon="phone"
           placeholder="ENTER CHAPTER IMAGE URL"
           type="text"
+          value={form && form.image}
           onInputChange={onInputChange}
           name="image"
         />
@@ -162,6 +171,7 @@ const AddChaptersForm = () => {
           icon="phone"
           placeholder="ENTER TITLE"
           type="text"
+          value={form && form.title}
           onInputChange={onInputChange}
           name="title"
         />
@@ -170,8 +180,8 @@ const AddChaptersForm = () => {
         <TextInputLayout
           icon="phone"
           placeholder="ENTER CHAPTER NUMBER"
-          type="text"
-          // value={profileInfo.contact}
+          type="number"
+          value={form && form.number}
           onInputChange={onInputChange}
           name="number"
         />
@@ -181,6 +191,7 @@ const AddChaptersForm = () => {
           icon="description"
           placeholder="ENTER DESCRIPTION"
           type="text"
+          value={form && form.description}
           // value={profileInfo.contact}
           onInputChange={onInputChange}
           name="description"
@@ -198,7 +209,7 @@ const AddChaptersForm = () => {
           {lessons &&
             lessons.map((item, index) => {
               return (
-                <>
+                <div key={index}>
                   {/* @TODO: append lessonNumber accordingly while sending data to server */}
                   {console.log(item.name)}
                   <ListItemLesson
@@ -206,7 +217,7 @@ const AddChaptersForm = () => {
                     video={item}
                     lessonNumber={index + 1}
                   />
-                </>
+                </div>
               );
             })}
         </List>
@@ -253,7 +264,6 @@ const AddChaptersForm = () => {
               chapters.map((item, index) => {
                 return (
                   <>
-                    {console.log(item.name)}
                     <ListItemChapter key={index} chapter={item} />
                   </>
                 );
