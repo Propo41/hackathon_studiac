@@ -20,7 +20,6 @@ const signInController = async (req, res) => {
     query: VIEW_USER_BY_EMAIL,
     variables: {
       email: req.body.email,
-      role: "student",
     },
   };
 
@@ -48,6 +47,7 @@ const signInController = async (req, res) => {
           });
         } else {
           const user = data.User[0];
+
           // user account found
           // now check if password is correct
           if (bcrypt.compareSync(req.body.password, user.password)) {
@@ -60,7 +60,6 @@ const signInController = async (req, res) => {
             });
 
             isProfileCreated(user, res, token);
-
           } else {
             res.json({ status: false, message: "Incorrect password entered!" });
           }
@@ -131,7 +130,6 @@ const signUpController = (req, res) => {
     query: VIEW_USER_BY_EMAIL,
     variables: {
       email: req.body.email,
-      role: "student",
     },
   };
 
@@ -146,8 +144,10 @@ const signUpController = (req, res) => {
     },
     function (error, response, body) {
       // convert body to JSON
-      const { data } = JSON.parse(body);
-      if (data.User.length === 0) {
+      const data = JSON.parse(body);
+      console.log(data);
+
+      if (data.data.User.length === 0) {
         // user account doesn't exist, create user
         createUser(req, res);
       } else {

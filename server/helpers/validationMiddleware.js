@@ -6,8 +6,8 @@ const signupValidation = (req, res, next) => {
   const validationRule = {
     email: "required|email",
     username: "required|string",
-    password: "required|string|min:6|confirmed",
-    password_confirmation: "required|string|min:6",
+    password: "required|string|min:5|confirmed",
+    password_confirmation: "required|string|min:5",
   };
 
   let validation = new Validator(req.body, validationRule);
@@ -34,7 +34,7 @@ const signInValidation = (req, res, next) => {
 
   const validationRule = {
     email: "required|email",
-    password: "required|string|min:6",
+    password: "required|string|min:5",
   };
 
   let validation = new Validator(req.body, validationRule);
