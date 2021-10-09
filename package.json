@@ -30,6 +30,7 @@
   "scripts": {
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "start": "(cd server && npm start)",
     "eject": "react-scripts eject",
     "server": "(cd server && npm start)",
     "client": "react-scripts start",
