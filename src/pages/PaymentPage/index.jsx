@@ -10,6 +10,7 @@ import {
   Paper,
   Grid,
   Divider,
+  CircularProgress,
 } from "@material-ui/core";
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
@@ -21,6 +22,14 @@ import TextInputLayout from "../../components/TextInputLayout";
 import SubjectFeatured from "../../components/SubjectFeatured";
 import MarkdownViewer from "../../components/MarkdownViewer";
 import PrivateNavbar from "../../components/PrivateNavbar";
+import { useNavigate, useParams } from "react-router";
+import { useQuery } from "@apollo/client";
+import { CHECKOUT_CLASS } from "../../graphql/queries";
+import alertMaker from "../../utils/alertMaker";
+import { POST_AUTH } from "../../api/api";
+import Alert from "../../components/AlertCustom";
+import Loading from "../../components/Loading";
+import ErrorPage from "../ErrorPage";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -63,47 +72,88 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const otherSubjects = [
-  {
-    title: "Программирование",
-    shortDescription:
-      "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
-    image: "https://picsum.photos/seed/picsum/200/300",
-  },
-  {
-    title: "Программирование",
-    shortDescription:
-      "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
-    image: "https://picsum.photos/seed/picsum/200/300",
-  },
-  {
-    title: "Программирование",
-    shortDescription:
-      "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
-    image: "https://picsum.photos/seed/picsum/200/300",
-  },
-  {
-    title: "Программирование",
-    shortDescription:
-      "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
-    image: "https://picsum.photos/seed/picsum/200/300",
-  },
-];
-
 const procedure = `**Procedure**: dapibus eu euismod. Vestibulum dui nibh non convallis rhoncus.
 Sociis ullamcorper ut tincidunt massa dignissim nisi massa nunc.
 Posuere netus pharetra tristique nisl, suspendisse et. Sem purus
 sed d`;
 
-const orderSummary = {
-  subscription: "Class 1",
-  price: "300",
-  discounts: "150",
-};
-
 const PaymentPage = () => {
   const theme = useTheme();
   const classes = useStyles();
+
+  const [alert, setAlert] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const navigate = useNavigate();
+  const [input, setInput] = React.useState(null);
+
+  // get url params
+  const { classId } = useParams();
+  const { loading, error, data } = useQuery(CHECKOUT_CLASS, {
+    variables: { id: classId },
+  });
+
+  if (loading) {
+    return <CircularProgress />;
+  }
+  if (error) {
+    return <ErrorPage description={error.message} />;
+  }
+
+  console.log(data);
+
+  const orderSummary = {
+    subscription: data.Class_by_pk.name,
+    price: data.Class_by_pk.SubscriptionFee.fee,
+    discounts: data.Class_by_pk.SubscriptionFee.discount,
+  };
+
+  const otherSubjects = data.Class_by_pk.Subjects;
+
+  const onInputChange = (event) => {
+    const { value, name } = event.target;
+    setInput((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    console.log("data");
+
+    console.log(input);
+
+    try {
+      // TODO: fetch these values from the server instead
+
+      // convert string to int
+
+      input.classId = parseInt(classId);
+      input.discount = orderSummary.discounts;
+      input.rawPrice = orderSummary.price;
+      input.paymentGateway = "Bkash";
+
+      const { data } = await POST_AUTH("/user/payment", input);
+      console.log(data);
+
+      console.log(alertMaker(data));
+
+      setAlert(alertMaker(data));
+    } catch (e) {
+      console.log(e.response.data.data);
+      console.log(e.response.data.message);
+
+      setAlert({
+        severity: "error",
+        title: "Validation Error!",
+        message: e.response.data.message,
+      });
+    }
+
+    setIsLoading(false);
+  };
+
   return (
     <>
       <Helmet>
@@ -168,8 +218,9 @@ const PaymentPage = () => {
                 <Grid item xs={12} sm={6}>
                   <div style={{ marginTop: theme.spacing(3) }}>
                     <TextInputLayout
-                      name="Billing Address"
+                      name="billingAddress"
                       id="billingAddress"
+                      title="Billing Address"
                       type="text"
                       readOnly={true}
                       placeholder="Bangladesh"
@@ -177,8 +228,9 @@ const PaymentPage = () => {
                   </div>
                   <div style={{ marginTop: theme.spacing(1) }}>
                     <TextInputLayout
-                      name="Payment Method"
-                      id="paymentMethod"
+                      name="paymentGateway"
+                      title="Payment Method"
+                      id="paymentGateway"
                       type="text"
                       readOnly={true}
                       placeholder="Bkash"
@@ -186,24 +238,30 @@ const PaymentPage = () => {
                   </div>
                   <div style={{ marginTop: theme.spacing(1) }}>
                     <TextInputLayout
-                      name="Bkash Number"
-                      id="bkash"
+                      name="phoneNumber"
+                      title="Bkash Number"
+                      id="phoneNumber"
                       type="number"
+                      onInputChange={onInputChange}
                     />
                   </div>
                   <div style={{ marginTop: theme.spacing(1) }}>
                     <TextInputLayout
-                      name="TransactionID"
-                      id="transactionid"
+                      name="transactionId"
+                      title="TransactionID"
+                      id="transactionId"
                       type="text"
+                      onInputChange={onInputChange}
                     />
                   </div>
 
                   <div style={{ marginTop: theme.spacing(1) }}>
                     <TextInputLayout
-                      name="Reference Used"
+                      name="referenceUsed"
+                      title="Reference Used"
                       id="bkashReference"
                       type="text"
+                      onInputChange={onInputChange}
                     />
                   </div>
 
@@ -215,9 +273,20 @@ const PaymentPage = () => {
                     className={classes.buttonPrimary}
                     style={{ marginTop: theme.spacing(5) }}
                     disableElevation
+                    onClick={handleSubmit}
                   >
-                    Create Profile
+                    Proceed to Checkout
                   </Button>
+
+                  <div style={{ marginTop: theme.spacing(2) }}>
+                    {alert && alert.status && (
+                      <Alert
+                        severity={alert.severity}
+                        title={alert.title}
+                        message={alert.message}
+                      />
+                    )}
+                  </div>
                 </Grid>
 
                 {/* 
@@ -313,6 +382,7 @@ const PaymentPage = () => {
                 {otherSubjects.map((subject, index) => (
                   <Grid item key={index} xs={12} sm={6} md={4}>
                     <SubjectFeatured
+                      id={subject.id}
                       image={subject.image}
                       title={subject.title}
                       body={subject.shortDescription}

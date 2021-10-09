@@ -13,6 +13,10 @@ import { useTheme } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
 import LogoutComponent from "../LogoutComponent";
 import { Avatar } from "@material-ui/core";
+import { useQuery } from "@apollo/client";
+import { VIEW_NAVBAR_CONTENT } from "../../graphql/queries";
+import Loading from "../Loading";
+import ErrorPage from "../../pages/ErrorPage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const userInfo = {
+var userInfo = {
   name: "Ahnaf",
   email: "ahnaf@aust.ecom",
   image:
@@ -103,10 +107,19 @@ const PrivateNavbar = () => {
   const classes = useStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   // const mobileViewBreakpoint = useMediaQuery("(max-width: 599px)");
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+
+  const { loading, error, data } = useQuery(VIEW_NAVBAR_CONTENT);
+
+  if (loading) return <></>;
+  if (error) {
+    console.log(error);
+    return <ErrorPage description={error.message} />;
+  }
+  userInfo = data.User[0];
+  console.log(userInfo.profile.image);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -120,7 +133,7 @@ const PrivateNavbar = () => {
   const handleLogOut = (e) => {
     e.stopPropagation();
     setAnchorEl(null);
-    localStorage.removeItem("x-studiac-access-token");
+    localStorage.clear();
     window.location.href = "/";
   };
 
@@ -174,11 +187,7 @@ const PrivateNavbar = () => {
                 <div className={classes.logoutContainer}>
                   <Avatar
                     alt="company image"
-                    src={
-                      userInfo.profilePictureUrl
-                        ? userInfo.profilePictureUrl
-                        : "/assets/images/company_img_preview.svg"
-                    }
+                    src={userInfo.profile.image}
                     className={classes.large}
                   />
                   <h1 className={classes.userInfoText}>{userInfo.name}</h1>
@@ -253,7 +262,7 @@ const PrivateNavbar = () => {
 
             <div className={classes.rightToolbar}>
               <LogoutComponent
-                avatar={userInfo.image}
+                avatar={userInfo.profile.image}
                 name={userInfo.name}
                 email={userInfo.email}
               />

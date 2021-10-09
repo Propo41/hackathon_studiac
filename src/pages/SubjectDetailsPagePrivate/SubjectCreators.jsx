@@ -22,11 +22,11 @@ const SubjectCreators = ({ creators }) => {
       {creators.map((creator, index) => (
         <AvatarProfile
           key={index}
-          id={creator.id}
-          title={creator.name}
-          body={creator.bio}
-          image={creator.image}
-          subtitle={creator.designation}
+          id={creator.Contributor.id}
+          title={creator.Contributor.name}
+          body={creator.Contributor.bio}
+          image={creator.Contributor.image}
+          subtitle={creator.Contributor.designation}
         />
       ))}
     </Carousel>

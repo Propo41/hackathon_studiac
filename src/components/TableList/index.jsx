@@ -15,7 +15,7 @@ import MarkdownViewer from "../MarkdownViewer";
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
-    backgroundColor: theme.palette.lightash,
+    backgroundColor: theme.palette.lightash2,
   },
   column: {
     paddingLeft: theme.spacing(0),
@@ -80,7 +80,7 @@ export default function TableList(props) {
                       className={classes.column}
                       style={{
                         paddingLeft: theme.spacing(0),
-                        marginLeft: -100,
+                        marginLeft: -250,
                       }}
                     >
                       {row.name}

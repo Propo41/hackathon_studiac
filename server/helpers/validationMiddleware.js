@@ -57,11 +57,11 @@ const profileValidation = (req, res, next) => {
 
   const validationRule = {
     fullName: "required|string",
-    phone: "required|size|max:11",
+    phone: "required|string|size:11",
     address: "required|string",
     designation: "required|string",
     class: "required|string",
-    dob: "required|date",
+    dob: "required|string",
     medium: "required|string",
     institution: "required|string",
   };
@@ -73,10 +73,22 @@ const profileValidation = (req, res, next) => {
   });
 
   validation.fails((err) => {
+    const errors = [];
+    errors.push(validation.errors.first("fullName"));
+    errors.push(validation.errors.first("phone"));
+    errors.push(validation.errors.first("address"));
+    errors.push(validation.errors.first("designation"));
+    errors.push(validation.errors.first("class"));
+    errors.push(validation.errors.first("dob"));
+    errors.push(validation.errors.first("institution"));
+    errors.push(validation.errors.first("medium"));
+
+    console.log(errors);
+
     res.status(412).send({
       success: false,
       message: "Validation failed. Please check your input!",
-      data: err,
+      data: errors,
     });
   });
 };
@@ -85,7 +97,7 @@ const paymentValidation = (req, res, next) => {
   console.log(req.body);
 
   const validationRule = {
-    transactionId: "required|string|min:6",
+    transactionId: "required|string",
     phoneNumber: "required|string|size:11",
     rawPrice: "required|integer",
     discount: "required|integer",
@@ -100,10 +112,21 @@ const paymentValidation = (req, res, next) => {
   });
 
   validation.fails((err) => {
+    const errors = [];
+    errors.push(validation.errors.first("transactionId"));
+    errors.push(validation.errors.first("phoneNumber"));
+    errors.push(validation.errors.first("rawPrice"));
+    errors.push(validation.errors.first("designation"));
+    errors.push(validation.errors.first("discount"));
+    errors.push(validation.errors.first("classId"));
+    errors.push(validation.errors.first("paymentGateway"));
+
+    console.log(errors);
+
     res.status(412).send({
       success: false,
       message: "Validation failed. Please check your input!",
-      data: err,
+      data: errors,
     });
   });
 };

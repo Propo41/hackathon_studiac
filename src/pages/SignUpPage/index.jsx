@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { POST } from "../../api/api";
 import Alert from "../../components/AlertCustom";
 import alertMaker from "../../utils/alertMaker";
+import Loading from "../../components/Loading";
 
 const signUpPageContent = {
   title: "Lorem ipsum dolor sit amet",

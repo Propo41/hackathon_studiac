@@ -23,6 +23,11 @@ import iconMapper from "../../utils/icon_mapper";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
 import PrivateNavbar from "../../components/PrivateNavbar";
 import { useNavigate } from "react-router";
+import { useQuery } from "@apollo/client";
+import { LANDING_PAGE, STUDENT_HOMEPAGE } from "../../graphql/queries";
+import Loading from "../../components/Loading";
+import getAvailableClasses from "../../utils/availableClasses";
+import ErrorPage from "../../pages/ErrorPage";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -104,73 +109,12 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-const subjects = [
-  {
-    id: "1",
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image: "https://picsum.photos/200/300",
-    labelColor: "#00C890",
-    category: {
-      name: "Class 1",
-      color: "#00C890",
-    },
-  },
-  {
-    id: "2",
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image: "https://picsum.photos/200/300",
-    labelColor: "#00C890",
-    category: {
-      name: "Class 1",
-      color: "#00C890",
-    },
-  },
-  {
-    id: "3",
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image: "https://picsum.photos/200/300",
-    labelColor: "#00C890",
-    category: {
-      name: "Class 1",
-      color: "#00C890",
-    },
-  },
-  {
-    id: "4",
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image: "https://picsum.photos/200/300",
-    labelColor: "#00C890",
-    category: {
-      name: "Class 1",
-      color: "#00C890",
-    },
-  },
-];
 
 const header = {
   title: "Lorem ipsum dolor sit amet",
   subtitle:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad.",
 };
-
-const dropdownClasses = [
-  "Class 1",
-  "Class 2",
-  "Class 3",
-  "Class 4",
-  "Class 5",
-  "Class 6",
-  "Class 7",
-  "Class 8",
-  "Class 9",
-  "Class 10",
-  "Class 11",
-  "Class 12",
-];
 
 const userRecentWatch = {
   chapterId: "1",
@@ -188,6 +132,38 @@ sed do eiusmod tempor  Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
 const StudentHomepage = () => {
   const theme = useTheme();
   const classes = useStyles();
+  const navigate = useNavigate();
+
+  if (localStorage.getItem("is-profile") === "false") {
+    navigate("/profile");
+  }
+  const [filteredSubjects, setFilterSubjects] = React.useState(null);
+
+  const { loading, error, data } = useQuery(STUDENT_HOMEPAGE);
+
+  if (loading) return <Loading />;
+  if (error) {
+    console.log(error);
+    return <ErrorPage description={error.message} />;
+  }
+
+  const subjects = data.Subject;
+
+  // check which classes are available in subjects
+  const dropdownClasses = getAvailableClasses(subjects);
+
+  const onFilterSelect = (selected) => {
+    if (selected) {
+      if (selected === "All") {
+        setFilterSubjects(subjects);
+      } else {
+        setFilterSubjects(
+          subjects.filter((subject) => subject.Class.category === selected)
+        );
+      }
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -218,18 +194,18 @@ const StudentHomepage = () => {
         </div>
 
         {/* Continue Watching */}
-        <Container
+        {/*    <Container
           component="main"
           sx={{ mt: 8, mb: 2 }}
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_SMALL) }}
-        >
-          <Separator title="Continue Watching" />
+        > */}
+        {/*   <Separator title="Continue Watching" />
 
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
             <ContinueWatching userRecentWatch={userRecentWatch} />
-          </div>
-        </Container>
+          </div> */}
+        {/*  </Container> */}
 
         {/* Other Subjects */}
         <Container
@@ -243,11 +219,12 @@ const StudentHomepage = () => {
             <Dropdown
               options={dropdownClasses}
               currentValue={dropdownClasses[0]}
+              onFilterSelect={onFilterSelect}
             />
           </div>
 
           <div style={{ marginTop: theme.spacing(3) }}>
-            <OurSubjects subjects={subjects} />
+            <OurSubjects subjects={filteredSubjects || subjects} />
           </div>
         </Container>
 

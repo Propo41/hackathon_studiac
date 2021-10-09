@@ -14,10 +14,12 @@ export const POST = async (url, payload) => {
 
 /* private queries */
 const config = {
-  headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("x-studiac-access-token"),
+  },
 };
 
-export const GET_AUTH = async (url) => {
+export const GET_AUTH = async (url, payload) => {
   return await axios.get(`${apiBaseURL}/${url}`, config);
 };
 
@@ -29,21 +31,8 @@ export const POST_AUTH = async (url, payload) => {
 export const DELETE_AUTH = async (url, payload) => {
   return await axios.delete(`${apiBaseURL}/${url}`, {
     headers: {
-      Authorization: "Bearer " + localStorage.getItem("token"),
+      Authorization: "Bearer " + localStorage.getItem("x-studiac-access-token"),
     },
     data: payload,
   });
 };
-
-/* // if need for headers etc.
-
-const headers = "some headers";
-
-export const POST = (url, data) => {
-  return axios(`${apiBaseURL}/${url}`, {
-    method: "POST",
-    headers,
-    data,
-  });
-};
- */

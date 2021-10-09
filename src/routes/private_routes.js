@@ -9,6 +9,9 @@ import SubjectsDetailsPagePrivate from "../pages/SubjectDetailsPagePrivate";
 import NotFoundPage from "../pages/NotFoundPage";
 
 export default function Router() {
+  if (!localStorage.getItem("is-profile")) {
+  }
+
   return useRoutes([
     {
       path: "/",
@@ -34,7 +37,7 @@ export default function Router() {
       element: <StudentMySubjectsPage />,
     },
     {
-      path: "/payment",
+      path: "/payment/:classId",
       element: <PaymentPage />,
     },
 

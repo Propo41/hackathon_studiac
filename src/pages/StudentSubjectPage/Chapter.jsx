@@ -38,7 +38,6 @@ function Chapter(props) {
 
   const onSubjectClick = () => {
     console.log("subject Clicked");
-    
   };
 
   return (
@@ -66,7 +65,7 @@ function Chapter(props) {
           </Typography>
         </CardContent>
         <div style={{ paddingLeft: theme.spacing(3) }}>
-          <ProgressBar progressLength={chapter.progress} />
+          <ProgressBar progressLength={0} />
         </div>
       </div>
     </Card>

@@ -10,6 +10,12 @@ const verifyToken = (req, res, next) => {
   const bearerToken = req.headers.authorization;
 
   // split the token into two parts
+  if (!bearerToken) {
+    return res.status(401).send({
+      status: false,
+      message: "Unauthorized Access! You need to login to access this resource",
+    });
+  }
   const [bearer, token] = bearerToken.split(" ");
 
   if (!token) {

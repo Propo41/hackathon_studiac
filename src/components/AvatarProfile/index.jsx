@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import {
   Avatar,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -18,6 +19,8 @@ import {
 import { makeStyles } from "@material-ui/styles";
 import React from "react";
 import { CONTRIBUTOR_PROFILE } from "../../graphql/queries";
+import ErrorPage from "../../pages/ErrorPage";
+import Loading from "../Loading";
 import MarkdownViewer from "../MarkdownViewer";
 import SubjectInstructor from "../SubjectInstructor";
 
@@ -144,10 +147,10 @@ function AlertDialog(props) {
   });
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <CircularProgress />;
   }
   if (error) {
-    return <div>Error...</div>;
+    return <ErrorPage description={error.message} />;
   }
 
   var user = {

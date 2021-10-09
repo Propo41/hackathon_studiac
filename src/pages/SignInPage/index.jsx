@@ -2,17 +2,11 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
   CircularProgress,
-  createTheme,
-  CssBaseline,
-  FormControlLabel,
   Grid,
   Hidden,
   makeStyles,
-  MuiThemeProvider,
   Paper,
-  TextField,
   Typography,
 } from "@material-ui/core";
 import * as React from "react";
@@ -24,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import Alert from "../../components/AlertCustom";
 import { POST } from "../../api/api";
 import alertMaker from "../../utils/alertMaker";
+import Loading from "../../components/Loading";
 
 const useStyles = makeStyles((theme) => ({
   buttonPrimary: {
@@ -85,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
 function SignInSide() {
   const theme = useTheme();
   const classes = useStyles();
+
   const [alert, setAlert] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
@@ -108,10 +104,19 @@ function SignInSide() {
       setAlert(alertMaker(data));
 
       if (data.status) {
-        setIsLoading(false);
-        console.log(data);
-        localStorage.setItem("x-studiac-access-token", data.token);
-        window.location.href = "/";
+        if (data.isProfileCreated) {
+          setIsLoading(false);
+          console.log(data);
+          localStorage.setItem("x-studiac-access-token", data.token);
+          localStorage.setItem("is-profile", true);
+          window.location.href = "/";
+        } else {
+          setIsLoading(true);
+          console.log(data);
+          localStorage.setItem("x-studiac-access-token", data.token);
+          localStorage.setItem("is-profile", false);
+          window.location.href = "/profile";
+        }
       }
     } catch (e) {
       setAlert(alertMaker(e.response.data));

@@ -248,4 +248,88 @@ var subjectDetails = {
   ],
 };
 
-export { contributors, subjects, tiers, header, community, subjectDetails };
+var otherSubjects = [
+  {
+    title: "Программирование",
+    shortDescription:
+      "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
+    image: "https://picsum.photos/seed/picsum/200/300",
+  },
+  {
+    title: "Программирование",
+    shortDescription:
+      "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
+    image: "https://picsum.photos/seed/picsum/200/300",
+  },
+  {
+    title: "Программирование",
+    shortDescription:
+      "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
+    image: "https://picsum.photos/seed/picsum/200/300",
+  },
+  {
+    title: "Программирование",
+    shortDescription:
+      "Blockquotes can contain other Markdown formatted elements. Not all elements can be",
+    image: "https://picsum.photos/seed/picsum/200/300",
+  },
+];
+
+const studentSubject = {
+  id: "1",
+  title: "Mathematics",
+  description:
+    "Mathematics is the study of topics such as quantity, structure, space, and change.",
+  subjectChapters: [
+    {
+      id: "1",
+      chapter: "1",
+      title: "Программирование",
+      body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
+      image: "https://picsum.photos/200/300",
+      progress: 40,
+    },
+    {
+      id: "2",
+      chapter: "2",
+      title: "Программирование",
+      body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
+      image: "https://picsum.photos/200/300",
+      progress: 50,
+    },
+    {
+      id: "3",
+      chapter: "3",
+      title: "Программирование",
+      body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
+      image: "https://picsum.photos/200/300",
+      progress: 40,
+    },
+    {
+      id: "4",
+      chapter: "4",
+      title: "Программирование",
+      body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
+      image: "https://picsum.photos/200/300",
+      progress: 10,
+    },
+  ],
+};
+
+var orderSummary = {
+  subscription: "Class 1",
+  price: "300",
+  discounts: "150",
+};
+
+export {
+  contributors,
+  subjects,
+  tiers,
+  header,
+  community,
+  subjectDetails,
+  orderSummary,
+  otherSubjects,
+  studentSubject,
+};

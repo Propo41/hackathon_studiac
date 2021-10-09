@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 /**
  * @param  {List<String>} options a list of string
  * @param  {String} currentValue the currently selected value
+ * @param  {Function} onFilterSelect a function to be called when the value changes
  */
 export default function Dropdown(props) {
   const classes = useStyles();
@@ -63,6 +64,8 @@ export default function Dropdown(props) {
       } else {
         setSelected(selected);
       }
+
+      props.onFilterSelect(event.target.innerText);
     }
 
     setAnchorEl(null);

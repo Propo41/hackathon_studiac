@@ -23,6 +23,11 @@ import MarkdownViewer from "../../components/MarkdownViewer";
 import SubjectFeatured from "../../components/SubjectFeatured";
 import SubjectCreators from "./SubjectCreators";
 import PrivateNavbar from "../../components/PrivateNavbar";
+import { useParams } from "react-router";
+import { useQuery } from "@apollo/client";
+import { SUBJECT_DETAILS } from "../../graphql/queries";
+import Loading from "../../components/Loading";
+import ErrorPage from "../ErrorPage";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -219,6 +224,9 @@ const SubjectsDetailsPagePrivate = () => {
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width: 942px)");
 
+  // get url params
+  const { subjectId } = useParams();
+
   // smooth scroll to top with animation
   const scrollToTop = () => {
     window.scrollTo({
@@ -228,11 +236,27 @@ const SubjectsDetailsPagePrivate = () => {
   };
   scrollToTop();
 
+  const { loading, error, data } = useQuery(SUBJECT_DETAILS, {
+    variables: { subjectId: subjectId },
+  });
+
+  if (loading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <ErrorPage description={error.message} />;
+  }
+
+  console.log(data.Subject_by_pk);
+  const subject = data.Subject_by_pk;
+
+  console.log(data.Subject_by_pk);
+
   return (
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Subject Details</title>
+        <title>{subject.title}</title>
       </Helmet>
       <Box
         sx={{
@@ -249,13 +273,15 @@ const SubjectsDetailsPagePrivate = () => {
         <div className={classes.headerBackground}>
           <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
             <Header
-              id={subject.id}
               title={subject.title}
               shortDescription={subject.shortDescription}
               image={subject.image}
-              rating={subject.rating}
-              category={subject.category}
-              subscriptionFee={subject.subscriptionFee}
+              rating={0}
+              categoryName={subject.Class.name}
+              categoryColor={subject.Class.color}
+              classId={subject.Class.id}
+              subscriptionFee={subject.Class.SubscriptionFee.fee}
+              subscriptionDiscount={subject.Class.SubscriptionFee.discount}
             />
           </Container>
         </div>
@@ -290,12 +316,12 @@ const SubjectsDetailsPagePrivate = () => {
           </Typography>
           <div style={{ marginTop: theme.spacing(5) }}>
             {/* map rows */}
-            {subject.syllabus.map((row, index) => (
+            {subject.Chapters.map((row, index) => (
               <div key={index} style={{ marginTop: theme.spacing(1) }}>
                 <ExpandableList
                   title={row.title}
                   id={index}
-                  lessons={row.lessons}
+                  lessons={row.Lessons}
                   type="Syllabus"
                 />
               </div>
@@ -316,7 +342,7 @@ const SubjectsDetailsPagePrivate = () => {
           <div style={{ marginTop: theme.spacing(5) }}>
             {/* map rows */}
             <Grid container spacing={3} alignItems="flex-end">
-              {subject.featuredSubjects.map((subject, index) => (
+              {subject.Class.Subjects.map((subject) => (
                 <Grid item key={subject.id} xs={12} sm={6} md={4}>
                   <SubjectFeatured
                     id={subject.id}
@@ -342,7 +368,7 @@ const SubjectsDetailsPagePrivate = () => {
           </Typography>
 
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
-            <SubjectCreators creators={subject.subjectContributors} />
+            <SubjectCreators creators={subject.SubjectContributors} />
           </div>
         </Container>
 

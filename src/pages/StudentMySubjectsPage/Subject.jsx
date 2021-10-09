@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import {
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import {
 } from "@material-ui/core";
 import { useNavigate } from "react-router";
 import Label from "../../components/Label";
+import { STUDENT_SUBJECTS } from "../../graphql/queries";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,8 +35,6 @@ function Subject(props) {
   const theme = useTheme();
   const { subject } = props;
   const navigate = useNavigate();
-
-  console.log(props);
 
   const onChapterClick = () => {
     console.log("subject Clicked");

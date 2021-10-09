@@ -67,11 +67,8 @@ function Lesson(props) {
   const { lesson } = props;
   const theme = useTheme();
 
-  console.log(lesson);
-
   const onLessonClick = () => {
-    console.log("clicked");
-    props.onLessonClick(lesson);
+    props.onLessonClick(props.index);
   };
 
   return (
@@ -81,14 +78,12 @@ function Lesson(props) {
         alt={props.title}
         height="150"
         image={
-          lesson.media.type === "video"
-            ? lesson.media.preview
+          lesson.type === "video"
+            ? lesson.Video.preview
             : "/assets/file_icon.svg"
         }
         title={props.title}
-        className={
-          lesson.media.type === "video" ? classes.media : classes.mediaIcon
-        }
+        className={lesson.type === "video" ? classes.media : classes.mediaIcon}
       />
       <CardContent style={{ paddingLeft: 0 }}>
         <Typography variant="body1" color="textPrimary">

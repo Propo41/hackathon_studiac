@@ -24,17 +24,30 @@ const GET_STUDENT_CHAPTERS = `
         Subject(where: {id: {_eq: $subjectId}}) {
         id
         title
-        short_description
-        overview
+        description:overview
         Chapters(order_by: {number: asc}, limit: $limit) {
             id
             title
             image
-            description
-            number
+            body:description
+            chapter:number
         }
         }
     }
 `;
 
-export { VIEW_USER_BY_EMAIL, GET_ENROLLMENT_DATE, GET_STUDENT_CHAPTERS };
+const CHECK_PROFILE_COMPLETION = `
+query CheckIfProfileCompleted {
+    UserProfile {
+     full_name
+    }
+  }
+  
+`;
+
+export {
+  VIEW_USER_BY_EMAIL,
+  GET_ENROLLMENT_DATE,
+  GET_STUDENT_CHAPTERS,
+  CHECK_PROFILE_COMPLETION,
+};

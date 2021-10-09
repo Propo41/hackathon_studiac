@@ -7,6 +7,7 @@ import {
   Card,
   CardMedia,
   CardContent,
+  Avatar,
 } from "@material-ui/core";
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
@@ -16,6 +17,12 @@ import { useTheme } from "@material-ui/styles";
 import Dropdown from "../../components/Dropdown";
 import Subject from "./Subject";
 import PrivateNavbar from "../../components/PrivateNavbar";
+import { useQuery } from "@apollo/client";
+import { STUDENT_SUBJECTS } from "../../graphql/queries";
+import Loading from "../../components/Loading";
+import getAvailableClasses from "../../utils/availableClasses";
+import { useLazyQuery } from "@apollo/client";
+import ErrorPage from "../ErrorPage";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -80,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const subjects = [
+var subjects = [
   {
     id: "2",
     title: "Subject 1",
@@ -144,6 +151,69 @@ const StudentMySubjectsPage = () => {
   const theme = useTheme();
   const classes = useStyles();
 
+  const { loading, error, data } = useQuery(STUDENT_SUBJECTS);
+  const [filteredSubjects, setFilterSubjects] = React.useState(null);
+
+  console.log(loading);
+  var done = false;
+
+  if (loading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <ErrorPage description={error.message} />;
+  }
+
+  const enrollments = data.Enrollment;
+
+  // iterate subjects and push content in an array
+  const subjects = [];
+  for (let i = 0; i < enrollments.length; i++) {
+    const className = enrollments[i].Class.name;
+    const classId = enrollments[i].Class.id;
+    const classColor = enrollments[i].Class.color_code;
+    const subjectsRaw = enrollments[i].Class.Subjects;
+
+    for (let j = 0; j < subjectsRaw.length; j++) {
+      const sub = subjectsRaw[j];
+      subjects.push({
+        id: sub.id,
+        title: sub.title,
+        body: sub.short_description,
+        image: sub.image,
+        category: {
+          id: classId,
+          name: className,
+          color: classColor,
+        },
+      });
+    }
+  }
+
+  console.log(loading);
+
+  // check which classes are available in subjects
+  const dropdownClasses = [];
+  dropdownClasses.push("All");
+  subjects.forEach((subject) => {
+    // only  push unique classes
+    if (dropdownClasses.indexOf(subject.category.name) === -1) {
+      dropdownClasses.push(subject.category.name);
+    }
+  });
+
+  const onFilterSelect = (selected) => {
+    if (selected) {
+      if (selected === "All") {
+        setFilterSubjects(subjects);
+      } else {
+        setFilterSubjects(
+          subjects.filter((subject) => subject.category.name === selected)
+        );
+      }
+    }
+  };
+
   window.scrollTo({
     top: 0,
     left: 0,
@@ -190,15 +260,37 @@ const StudentMySubjectsPage = () => {
           maxWidth="md"
           style={{ marginTop: theme.spacing(0) }}
         >
-          <div style={{ marginTop: theme.spacing(5) }}>
-            <Dropdown
-              options={dropdownClasses}
-              currentValue={dropdownClasses[0]}
-            />
-          </div>
+          {(subjects || filteredSubjects).length === 0 && (
+            <div
+              style={{
+                textAlign: "-webkit-center",
+                marginTop: theme.spacing(10),
+                marginBottom: theme.spacing(10),
+              }}
+            >
+              <img
+                src="/assets/empty.svg"
+                alt="Empty State"
+                style={{ width: "50%" }}
+              />
+              <Typography variant="h4" style={{ marginTop: theme.spacing(4) }}>
+                You are not subscribed to any classes yet!
+              </Typography>
+            </div>
+          )}
+
+          {(subjects || filteredSubjects).length > 0 && (
+            <div style={{ marginTop: theme.spacing(5) }}>
+              <Dropdown
+                options={dropdownClasses}
+                currentValue={dropdownClasses[0]}
+                onFilterSelect={onFilterSelect}
+              />
+            </div>
+          )}
 
           <div style={{ marginTop: theme.spacing(3) }}>
-            {subjects.map((subject) => (
+            {(subjects || filteredSubjects).map((subject) => (
               <div
                 style={{ marginTop: theme.spacing(2) }}
                 key={subject.id}
@@ -212,10 +304,10 @@ const StudentMySubjectsPage = () => {
           </div>
         </Container>
 
+        <div style={{ marginBottom: theme.spacing(10) }} />
+
         {/* Footer starts here */}
-        <div style={{ marginTop: theme.spacing(GAP_LARGE) }}>
-          <Footer />
-        </div>
+        <Footer />
       </Box>
     </>
   );

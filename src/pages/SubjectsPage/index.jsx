@@ -15,6 +15,11 @@ import Header from "./Header";
 import OurSubjects from "./OurSubjects";
 import Dropdown from "../../components/Dropdown";
 import ExpandableList from "../../components/ExpandableList";
+import Loading from "../../components/Loading";
+import { useQuery } from "@apollo/client";
+import { STUDENT_HOMEPAGE } from "../../graphql/queries";
+import getAvailableClasses from "../../utils/availableClasses";
+import ErrorPage from "../ErrorPage";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -125,62 +130,6 @@ const header = {
   image: "./assets/landing_page_asset1.svg",
 };
 
-const dropdownClasses = [
-  "Class 1",
-  "Class 2",
-  "Class 3",
-  "Class 4",
-  "Class 5",
-  "Class 6",
-  "Class 7",
-  "Class 8",
-  "Class 9",
-  "Class 10",
-  "Class 11",
-  "Class 12",
-];
-
-const syllabus = [
-  {
-    title: "Программирование",
-    lessons: [
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-    ],
-  },
-
-  {
-    title: "Программирование",
-    lessons: [
-      { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-    ],
-  },
-
-  {
-    title: "Программирование",
-    lessons: [
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-    ],
-  },
-  {
-    title: "Программирование",
-    lessons: [
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "material", name: "Frozen yoghurt", duration: "45:00" },
-      { type: "video", name: "Frozen yoghurt", duration: "45:00" },
-    ],
-  },
-];
-
 const faq = [
   {
     title: "Lorem ipsum dolor sit ipsum sit?",
@@ -207,6 +156,33 @@ const faq = [
 const SubjectsPage = () => {
   const theme = useTheme();
   const classes = useStyles();
+  const [filteredSubjects, setFilterSubjects] = React.useState(null);
+
+  const { loading, error, data } = useQuery(STUDENT_HOMEPAGE);
+
+  if (loading) return <Loading />;
+  if (error) {
+    console.log(error);
+    return <ErrorPage description={error.message} />;
+  }
+
+  const subjects = data.Subject;
+
+  // check which classes are available in subjects
+  const dropdownClasses = getAvailableClasses(subjects);
+
+  const onFilterSelect = (selected) => { 
+    if (selected) {
+      if (selected === "All") {
+        setFilterSubjects(subjects);
+      } else {
+        setFilterSubjects(
+          subjects.filter((subject) => subject.Class.category === selected)
+        );
+      }
+    }
+  }; 
+
   return (
     <>
       <Helmet>
@@ -248,13 +224,14 @@ const SubjectsPage = () => {
             <Dropdown
               options={dropdownClasses}
               currentValue={dropdownClasses[0]}
+              onFilterSelect={onFilterSelect}
             />
           </div>
 
           <div style={{ marginTop: theme.spacing(3) }}>
-            <OurSubjects subjects={subjects} />
+            <OurSubjects subjects={filteredSubjects || subjects} />
           </div>
-        </Container>
+        </Container> 
 
         {/* Join For Free */}
         <div

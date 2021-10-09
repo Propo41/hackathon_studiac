@@ -21,6 +21,14 @@ import { useTheme } from "@material-ui/styles";
 import Lesson from "./Lesson";
 import ReactPlayer from "react-player";
 import PrivateNavbar from "../../components/PrivateNavbar";
+import { useQuery } from "@apollo/client";
+import {
+  GET_STUDENT_CHAPTER_LESSONS,
+  LANDING_PAGE,
+} from "../../graphql/queries";
+import { useParams } from "react-router";
+import Loading from "../../components/Loading";
+import ErrorPage from "../ErrorPage";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -81,13 +89,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const chapter = {
+/* var chapter = {
   id: "1123",
   chapterNumber: 12,
   title: "Chapter Name",
   description:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tLorem ipsum dolor sit amet, consectetur adipiscing elit",
-  lessons: [
+  Lessons: [
     {
       id: "1",
       number: 1,
@@ -97,11 +105,16 @@ const chapter = {
       
       consectetur adipiscing elit, sed do eiusmod tempor  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor empor 
       `,
-      media: {
-        type: "video",
+      type: "material",
+      Video: {
         preview:
           "https://c.ndtvimg.com/2020-03/ctpi4dd8_billie-eilish-body-shaming_625x300_11_March_20.jpg",
         url: "https://youtu.be/6GTw3kyaKgQ",
+        duration: "0",
+      },
+      Material: {
+        url: "https://youtu.be/6GTw3kyaKgQ",
+        fileType: "pdf",
       },
     },
     {
@@ -151,16 +164,31 @@ const chapter = {
     },
   ],
 };
-
+ */
 const StudentChapterPage = () => {
   const theme = useTheme();
   const classes = useStyles();
   // by default, start from 0th lesson
-  const [currentLesson, setCurrentLesson] = React.useState(chapter.lessons[0]);
+  const [currentLesson, setCurrentLesson] = React.useState(0);
 
-  const onLessonClick = (lesson) => {
-    console.log(lesson);
-    setCurrentLesson(lesson);
+  const { chapterId } = useParams();
+
+  const { loading, error, data } = useQuery(GET_STUDENT_CHAPTER_LESSONS, {
+    variables: {
+      chapterId,
+    },
+  });
+
+  if (loading) return <Loading />;
+  if (error) {
+    console.log(error);
+    return <ErrorPage description={error.message} />;
+  }
+
+  const chapter = data.Chapter[0];
+
+  const onLessonClick = (index) => {
+    setCurrentLesson(index);
     // smooth scroll to top with animation
     window.scrollTo({
       top: 0,
@@ -226,10 +254,14 @@ const StudentChapterPage = () => {
           style={{ marginTop: theme.spacing(0) }}
         >
           <div style={{ marginTop: theme.spacing(3) }}>
-            {currentLesson.media.type === "video" ? (
+            {chapter.Lessons[currentLesson] &&
+            chapter.Lessons[currentLesson].type === "video" ? (
               <Card elevation={0}>
                 <ReactPlayer
-                  url={currentLesson.media.url}
+                  url={
+                    chapter.Lessons[currentLesson] &&
+                    chapter.Lessons[currentLesson].Video.url
+                  }
                   controls={true}
                   width="100%"
                   height={theme.spacing(55)}
@@ -242,9 +274,15 @@ const StudentChapterPage = () => {
                 <CardContent>
                   <Button
                     size="small"
-                    href={currentLesson.media.url}
+                    href={
+                      chapter.Lessons[currentLesson] &&
+                      chapter.Lessons[currentLesson].Material.url
+                    }
                     target="_blank"
-                    to={currentLesson.media.url}
+                    to={
+                      chapter.Lessons[currentLesson] &&
+                      chapter.Lessons[currentLesson].Material.url
+                    }
                     style={{
                       color: theme.palette.darkash,
                       textTransform: "none",
@@ -276,7 +314,11 @@ const StudentChapterPage = () => {
                     paddingRight: theme.spacing(2),
                   }}
                 >
-                  {currentLesson.number + ". " + currentLesson.title}
+                  {chapter.Lessons[currentLesson] &&
+                    chapter.Lessons[currentLesson].number +
+                      ". " +
+                      chapter.Lessons[currentLesson] &&
+                    chapter.Lessons[currentLesson].title}
                 </Typography>
 
                 <Typography
@@ -287,20 +329,27 @@ const StudentChapterPage = () => {
                   }}
                   color="textSecondary"
                 >
-                  {currentLesson.description}
+                  {chapter.Lessons[currentLesson] &&
+                    chapter.Lessons[currentLesson].description}
                 </Typography>
               </Grid>
 
               {/* available lessons */}
               <Grid item xs={12} md={4}>
-                {chapter.lessons.map((lesson, index) => (
-                  <Lesson
-                    lesson={lesson}
-                    key={index}
-                    isWatching={lesson.id === currentLesson.id}
-                    onLessonClick={onLessonClick}
-                  />
-                ))}
+                {chapter.Lessons &&
+                  chapter.Lessons.map((lesson, index) => {
+                    return (
+                      <Lesson
+                        lesson={lesson}
+                        key={lesson.id}
+                        index={index}
+                        isWatching={
+                          lesson.id === chapter.Lessons[currentLesson].id
+                        }
+                        onLessonClick={onLessonClick}
+                      />
+                    );
+                  })}
               </Grid>
             </Grid>
           </div>

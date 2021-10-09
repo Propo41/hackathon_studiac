@@ -56,7 +56,13 @@ const createProfileController = async (req, res) => {
       }
       if (body) {
         const { data } = JSON.parse(body);
+        console.log(body);
         res.json({ status: true, message: "Profile updated successfully!" });
+      } else {
+        res.json({
+          status: false,
+          message: "Someting went wrong. Try refreshing!",
+        });
       }
     }
   );
@@ -101,12 +107,20 @@ const paymentController = (req, res) => {
         res.json({ status: false, message: JSON.parse(error) });
       }
       if (body) {
-        const { data } = JSON.parse(body);
-        res.json({
-          status: true,
-          message:
-            "We have received your request. You will be notified once we verify your credentials. Thank you for being with us!",
-        });
+        const data = JSON.parse(body);
+        if (data.errors && data.errors.length > 0) {
+          res.json({
+            status: false,
+            message:
+              "You have already made a request. Please wait for us to approve your request.",
+          });
+        } else {
+          res.json({
+            status: true,
+            message:
+              "We have received your request. You will be notified once we verify your credentials. Thank you for being with us!",
+          });
+        }
       }
     }
   );
@@ -120,6 +134,7 @@ const getChaptersController = (req, res) => {
   const userId = res.locals.userId;
   console.log("userid: ", userId);
 
+  console.log("subjectid: ", req.body.subjectId);
   const graphqlReq = {
     query: GET_ENROLLMENT_DATE,
     variables: {
@@ -142,27 +157,46 @@ const getChaptersController = (req, res) => {
         res.json({ status: false, message: JSON.parse(error) });
       }
       if (body) {
-        const { data } = JSON.parse(body);
-        if (data.Enrollment.length > 0) {
-          console.log(data.Enrollment[0]);
+        const data = JSON.parse(body);
+        console.log(data);
 
-          const chaptersToRelease = getNumberOfChaptersToRelease(
-            data.Enrollment[0].subscription_date
-          );
-
-          returnAvailableChapters(chaptersToRelease, req.body.subjectId, res);
-        } else {
+        if (data.errors && data.errors.length > 0) {
           res.json({
             status: false,
-            message: "Unexpected!! No Enrollment found",
+            message: data.errors[0].message,
           });
+        } else {
+          if (data.data.Enrollment.length > 0) {
+            console.log(data.data.Enrollment[0]);
+
+            const result = getNumberOfChaptersToRelease(
+              data.data.Enrollment[0].subscription_date
+            );
+
+            returnAvailableChapters(
+              result.numOfChaptersToRelease,
+              result.nextChapterIn,
+              req.body.subjectId,
+              res
+            );
+          } else {
+            res.json({
+              status: false,
+              message: "Unexpected!! No Enrollment found",
+            });
+          }
         }
       }
     }
   );
 };
 
-const returnAvailableChapters = (chaptersToRelease, subjectId, res) => {
+const returnAvailableChapters = (
+  chaptersToRelease,
+  nextChapterIn,
+  subjectId,
+  res
+) => {
   /*  await bcrypt.compare(password, user.password) */
   const _hasuraAdminSecret = process.env.HASURA_ADMIN_SECRET;
   const _url = process.env.HASURA_GRAPHQL_ENDPOINT;
@@ -190,6 +224,7 @@ const returnAvailableChapters = (chaptersToRelease, subjectId, res) => {
       }
       if (body) {
         const { data } = JSON.parse(body);
+        data.Subject[0].nextChapterIn = nextChapterIn;
         res.json(data);
         console.log(data);
       }

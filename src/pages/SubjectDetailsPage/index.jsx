@@ -9,7 +9,6 @@ import {
   CardMedia,
   CardContent,
   useMediaQuery,
-  CircularProgress,
 } from "@material-ui/core";
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
@@ -27,6 +26,8 @@ import PrivateNavbar from "../../components/PrivateNavbar";
 import { useQuery } from "@apollo/client";
 import { SUBJECT_DETAILS } from "../../graphql/queries";
 import { useParams } from "react-router";
+import Loading from "../../components/Loading";
+import ErrorPage from "../ErrorPage";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -107,14 +108,10 @@ const SubjectsDetailsPage = () => {
   });
 
   if (loading) {
-    return (
-      <div>
-        <CircularProgress />
-      </div>
-    );
+    return <Loading />;
   }
   if (error) {
-    return <div>Error</div>;
+    return <ErrorPage description={error.message} />;
   }
 
   console.log(data.Subject_by_pk);

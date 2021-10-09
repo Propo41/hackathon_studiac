@@ -20,9 +20,11 @@ import { useTheme } from "@material-ui/styles";
 import Dropdown from "../../components/Dropdown";
 import Chapter from "./Chapter";
 import PrivateNavbar from "../../components/PrivateNavbar";
-
-const GAP_LARGE = 12;
-const GAP_SMALL = 8;
+import { useParams } from "react-router";
+import { GET_AUTH, POST_AUTH } from "../../api/api";
+import alertMaker from "../../utils/alertMaker";
+import Loading from "../../components/Loading";
+import ErrorPage from "../ErrorPage";
 
 const useStyles = makeStyles((theme) => ({
   landingImage: {
@@ -74,53 +76,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const subject = {
-  id: "1",
-  title: "Mathematics",
-  description:
-    "Mathematics is the study of topics such as quantity, structure, space, and change.",
-  subjectChapters: [
-    {
-      id: "1",
-      chapter: "1",
-      title: "Программирование",
-      body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-      image: "https://picsum.photos/200/300",
-      progress: 40,
-    },
-    {
-      id: "2",
-      chapter: "2",
-      title: "Программирование",
-      body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-      image: "https://picsum.photos/200/300",
-      progress: 50,
-    },
-    {
-      id: "3",
-      chapter: "3",
-      title: "Программирование",
-      body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-      image: "https://picsum.photos/200/300",
-      progress: 40,
-    },
-    {
-      id: "4",
-      chapter: "4",
-      title: "Программирование",
-      body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-      image: "https://picsum.photos/200/300",
-      progress: 10,
-    },
-  ],
-};
-
-const upcomingChapterTime = "3 days";
-
 const StudentSubjectPage = () => {
   const theme = useTheme();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [subject, setSubject] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [isError, setIsError] = React.useState({ status: false, message: "" });
+  // get url params
+  const { subjectId } = useParams();
+
+  React.useEffect(() => {
+    const exe = async () => {
+      try {
+        const { data } = await POST_AUTH("user/get-chapters", {
+          subjectId: subjectId,
+        });
+        setSubject(data.Subject[0]);
+      } catch (e) {
+        console.log(e);
+        setIsError({ status: true, message: e.message });
+      }
+      setIsLoading(false);
+    };
+    exe();
+  }, [subjectId]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -131,6 +111,14 @@ const StudentSubjectPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (isError.status) {
+    return <ErrorPage description={isError.message} />;
+  }
+
   return (
     <>
       <Helmet>
@@ -165,7 +153,7 @@ const StudentSubjectPage = () => {
         {/* Header stuff */}
         <div className={classes.headerBackground}>
           <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="md">
-            <Grid container style={{ height: theme.spacing(52) }}>
+            <Grid container style={{ height: theme.spacing(55) }}>
               {/* Left side content */}
               <Grid item xs={8} md={8} lg={8}>
                 <Typography
@@ -187,7 +175,7 @@ const StudentSubjectPage = () => {
                     paddingRight: theme.spacing(3),
                   }}
                 >
-                  {subject.description}
+                  {subject.description.slice(0, 150)}...
                 </Typography>
               </Grid>
               {/* Right side content */}
@@ -210,7 +198,9 @@ const StudentSubjectPage = () => {
                     paddingLeft: theme.spacing(1),
                   }}
                 >
-                  {"In " + upcomingChapterTime}
+                  {subject.nextChapterIn === 0
+                    ? "Coming Today"
+                    : "In " + subject.nextChapterIn + " days"}
                 </Typography>
 
                 {/* add a text button */}
@@ -243,10 +233,10 @@ const StudentSubjectPage = () => {
           component="main"
           sx={{ mt: 8, mb: 2 }}
           maxWidth="md"
-          style={{ marginTop: theme.spacing(0) }}
+          style={{ marginTop: theme.spacing(2) }}
         >
           <div style={{ marginTop: theme.spacing(3) }}>
-            {subject.subjectChapters.map((chapter, index) => (
+            {subject.Chapters.map((chapter, index) => (
               <div
                 key={chapter.id}
                 onClick={() => {
@@ -260,10 +250,10 @@ const StudentSubjectPage = () => {
           </div>
         </Container>
 
+        <div style={{ marginBottom: theme.spacing(10) }}></div>
+
         {/* Footer starts here */}
-        <div style={{ marginTop: theme.spacing(GAP_LARGE) }}>
-          <Footer />
-        </div>
+        <Footer />
       </Box>
     </>
   );

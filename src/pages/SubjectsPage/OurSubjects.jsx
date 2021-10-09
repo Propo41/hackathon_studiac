@@ -8,11 +8,12 @@ const OurSubjects = (props) => {
       {props.subjects.map((subject, index) => (
         <Grid item key={index} xs={12} sm={6} md={4}>
           <Subject
+            id={subject.id}
             title={subject.title}
             body={subject.body}
             image={subject.image}
-            labelColor={subject.labelColor}
-            category={subject.category}
+            labelColor={subject.Class.labelColor}
+            category={subject.Class.category}
           />
         </Grid>
       ))}

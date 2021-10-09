@@ -1,5 +1,6 @@
 import {
   AppBar,
+  CircularProgress,
   Container,
   Grid,
   Paper,
@@ -13,6 +14,12 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useTheme } from "@material-ui/core";
 import TextInputLayout from "../../components/TextInputLayout";
+import { useNavigate } from "react-router";
+import alertMaker from "../../utils/alertMaker";
+import { POST, POST_AUTH } from "../../api/api";
+import Alert from "../../components/AlertCustom";
+import SelectTextInputLayout from "../../components/SelectTextInputLayout";
+import Loading from "../../components/Loading";
 
 /* 
 
@@ -56,7 +63,10 @@ const AppBarComponent = () => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const onLogoutClick = () => {};
+  const onLogoutClick = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
   return (
     <AppBar
       position="static"
@@ -93,9 +103,69 @@ const AppBarComponent = () => {
   );
 };
 
+const classList = [
+  "Class 1",
+  "Class 2",
+  "Class 3",
+  "Class 4",
+  "Class 4",
+  "Class 5",
+  "Class 6",
+  "Class 7",
+  "Class 8",
+  "Class 9",
+  "Class 10",
+  "Class 11",
+  "Class 12",
+];
+
+const designationList = ["Student", "Teacher", "Institution"];
+
+const mediumList = ["Bangla Medium", "English Version"];
+
 const SetupProfilePage = () => {
   const classes = useStyles();
   const theme = useTheme();
+
+  const [alert, setAlert] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const navigate = useNavigate();
+  const [input, setInput] = React.useState(null);
+
+  const onInputChange = (event) => {
+    const { value, name } = event.target;
+    setInput((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log(event);
+    setIsLoading(true);
+
+    console.log(input);
+
+    try {
+      console.log(localStorage.getItem("x-studiac-access-token"));
+      const { data } = await POST_AUTH("/user/create-profile", input);
+      console.log(data);
+
+      setAlert(alertMaker(data));
+
+      if (data.status) {
+        // make a toast
+        setIsLoading(false);
+        localStorage.setItem("is-profile", "true");
+        window.location.href = "/";
+      }
+    } catch (e) {
+      setAlert(alertMaker(e.response.data));
+    }
+
+    setIsLoading(false);
+  };
 
   return (
     <>
@@ -120,52 +190,105 @@ const SetupProfilePage = () => {
             Setup Profile
           </Typography>
 
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            {isLoading && <CircularProgress />}
+          </div>
+
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <div style={{ marginTop: theme.spacing(1) }}>
-                <TextInputLayout name="Full Name" id="name" type="text" />
+                <TextInputLayout
+                  name="fullName"
+                  id="name"
+                  type="text"
+                  title="Full Name"
+                  onInputChange={onInputChange}
+                />
               </div>
             </Grid>
             <Grid item xs={12}>
-              <div style={{ marginTop: theme.spacing(1) }}>
-                <TextInputLayout name="Phone" id="phone" type="number" />
-              </div>
-            </Grid>
-            <Grid item xs={12}>
-              <div style={{ marginTop: theme.spacing(1) }}>
-                <TextInputLayout name="Address" id="address" type="text" />
-              </div>
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <div style={{ marginTop: theme.spacing(1) }}>
                 <TextInputLayout
-                  name="Designation"
-                  id="designation"
+                  name="phone"
+                  id="phone"
+                  type="number"
+                  title="Phone"
+                  onInputChange={onInputChange}
+                />
+              </div>
+            </Grid>
+            <Grid item xs={12}>
+              <div style={{ marginTop: theme.spacing(1) }}>
+                <TextInputLayout
+                  name="address"
+                  id="address"
                   type="text"
+                  title="Address"
+                  onInputChange={onInputChange}
                 />
               </div>
             </Grid>
             <Grid item xs={12} sm={6}>
               <div style={{ marginTop: theme.spacing(1) }}>
-                <TextInputLayout name="Class" id="class" type="text" />
+                <SelectTextInputLayout
+                  title="Designation"
+                  name="designation"
+                  icon="map"
+                  placeholder="Select Designation"
+                  value={null}
+                  onInputChange={onInputChange}
+                  list={designationList}
+                  setSelectedValue={setInput}
+                />
               </div>
             </Grid>
             <Grid item xs={12} sm={6}>
               <div style={{ marginTop: theme.spacing(1) }}>
-                <TextInputLayout name="Date of Birth" id="dob" type="date" />
+                <SelectTextInputLayout
+                  icon="map"
+                  placeholder="Select Class"
+                  value={null}
+                  onInputChange={onInputChange}
+                  list={classList}
+                  name="class"
+                  title="Class"
+                  setSelectedValue={setInput}
+                />
               </div>
             </Grid>
             <Grid item xs={12} sm={6}>
               <div style={{ marginTop: theme.spacing(1) }}>
-                <TextInputLayout name="Medium" id="medium" type="text" />
+                <TextInputLayout
+                  name="dob"
+                  id="dob"
+                  type="date"
+                  title="Date of Birth"
+                  onInputChange={onInputChange}
+                />
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <div style={{ marginTop: theme.spacing(1) }}>
+                <SelectTextInputLayout
+                  icon="map"
+                  placeholder="Select Medium"
+                  value={null}
+                  onInputChange={onInputChange}
+                  list={mediumList}
+                  name="medium"
+                  title="Medium"
+                  setSelectedValue={setInput}
+                />
               </div>
             </Grid>
             <Grid item xs={12}>
               <div style={{ marginTop: theme.spacing(1) }}>
                 <TextInputLayout
-                  name="Institution"
+                  name="institution"
                   id="institution"
                   type="text"
+                  title="Institution"
+                  onInputChange={onInputChange}
                 />
               </div>
             </Grid>
@@ -179,9 +302,18 @@ const SetupProfilePage = () => {
             className={classes.buttonPrimary}
             style={{ marginTop: theme.spacing(5) }}
             disableElevation
+            onClick={handleSubmit}
           >
             Create Profile
           </Button>
+
+          {alert && (
+            <Alert
+              severity={alert.severity}
+              title={alert.title}
+              message={alert.message}
+            />
+          )}
         </Paper>
       </Container>
     </>

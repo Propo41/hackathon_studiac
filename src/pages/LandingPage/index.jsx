@@ -21,6 +21,8 @@ import { useNavigate } from "react-router";
 import { useQuery } from "@apollo/client";
 import { LANDING_PAGE } from "../../graphql/queries";
 import { community, header, tiers } from "../../mock";
+import Loading from "../../components/Loading";
+import ErrorPage from "../ErrorPage";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -90,10 +92,10 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { loading, error, data } = useQuery(LANDING_PAGE);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading />;
   if (error) {
     console.log(error);
-    return <p>Error :(</p>;
+    return <ErrorPage description={error.message} />;
   }
   const subjects = data.Subject;
   const contributors = data.Contributor;

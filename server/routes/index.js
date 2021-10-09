@@ -32,6 +32,6 @@ router.post(
 );
 router.post("/user/payment", verifyToken, paymentValidation, paymentController);
 
-router.get("/user/get-chapters", verifyToken, getChaptersController);
+router.post("/user/get-chapters", verifyToken, getChaptersController);
 
 export default router;

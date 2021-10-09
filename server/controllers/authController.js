@@ -3,7 +3,10 @@
  */
 import { v4 as uuidv4 } from "uuid";
 import request from "request";
-import { VIEW_USER_BY_EMAIL } from "../graphql/queries.js";
+import {
+  CHECK_PROFILE_COMPLETION,
+  VIEW_USER_BY_EMAIL,
+} from "../graphql/queries.js";
 import { CREATE_USER } from "../graphql/mutations.js";
 import bcrypt from "bcryptjs";
 import { createJwtToken } from "../helpers/util.js";
@@ -48,6 +51,7 @@ const signInController = async (req, res) => {
           // user account found
           // now check if password is correct
           if (bcrypt.compareSync(req.body.password, user.password)) {
+            // check if user profile is created or not
             // generate jwt token
             const token = createJwtToken({
               id: user.id,
@@ -55,15 +59,62 @@ const signInController = async (req, res) => {
               role: user.role,
             });
 
-            res.json({
-              status: true,
-              message: "You are logged in!",
-              token: token,
-            });
+            isProfileCreated(user, res, token);
+
           } else {
             res.json({ status: false, message: "Incorrect password entered!" });
           }
         }
+      }
+    }
+  );
+};
+
+const isProfileCreated = (user, res, token) => {
+  const _url = process.env.HASURA_GRAPHQL_ENDPOINT;
+
+  const graphqlReq = {
+    query: CHECK_PROFILE_COMPLETION,
+    variables: {},
+  };
+
+  request.post(
+    {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      url: _url,
+      body: JSON.stringify(graphqlReq),
+    },
+    function (error, response, body) {
+      if (error) {
+        res.json({ status: false, message: JSON.parse(error) });
+      }
+      if (body) {
+        const { data } = JSON.parse(body);
+        if (data.UserProfile.length === 0) {
+          // user profile does not exist
+          res.json({
+            status: true,
+            message:
+              "You are logged in! Setup your profile first before continuing!",
+            token: token,
+            isProfileCreated: false,
+          });
+        } else {
+          res.json({
+            status: true,
+            message: "You are logged in!",
+            token: token,
+            isProfileCreated: true,
+          });
+        }
+      } else {
+        res.json({
+          status: false,
+          message: "Something went wrong processing your request!",
+        });
       }
     }
   );
