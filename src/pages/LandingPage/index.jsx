@@ -34,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 0,
       marginTop: 15,
     },
-    width: "80%",
-    height: "90%",
+    width: "100%",
+    height: "100%",
   },
   headerBackground: {
     background: theme.palette.gradients.primary,
@@ -138,7 +138,7 @@ const LandingPage = () => {
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_SMALL) }}
         >
-          <Separator title="What we do" />
+          <Separator title="What Our Modules Contain" />
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
             <AboutUs classes={classes} tiers={tiers} />
           </div>
@@ -243,9 +243,8 @@ const LandingPage = () => {
               color="textSecondary"
               style={{ marginTop: theme.spacing(3) }}
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim
-              ad.
+              Signing up for Studiac is easy! Become a member of Studiac
+              Community and start learning things differently today!
             </Typography>
 
             <Button

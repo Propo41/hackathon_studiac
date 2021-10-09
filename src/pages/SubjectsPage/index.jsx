@@ -31,8 +31,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 0,
       marginTop: 15,
     },
-    width: "80%",
-    height: "90%",
+    width: theme.spacing(250),
   },
   headerBackground: {
     background: theme.palette.gradients.primary,
@@ -83,73 +82,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const subjects = [
-  {
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image: "https://picsum.photos/200/300",
-    labelColor: "#00C890",
-    category: "Программирование",
-  },
-  {
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image: "https://picsum.photos/seed/picsum/200/300",
-    labelColor: "#00C890",
-    category: "Программирование",
-  },
-  {
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image:
-      "https://m.media-amazon.com/images/M/MV5BZDM2ZGU3NDgtZDUwNi00NjNmLTlkYjktNWU2ZTZmOTM3MjVlXkEyXkFqcGdeQWpnYW1i._V1_.jpg",
-    labelColor: "#00C890",
-    category: "Программирование",
-  },
-  {
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image: "https://picsum.photos/seed/picsum/200/300",
-    labelColor: "#00C890",
-    category: "Программирование",
-  },
-  {
-    title: "Программирование",
-    body: "Программирование — это наука построения программного обеспечения для обеспечения взаимодействия программного обеспечения с физическими средствами взаимодействия.",
-    image:
-      "https://m.media-amazon.com/images/M/MV5BZDM2ZGU3NDgtZDUwNi00NjNmLTlkYjktNWU2ZTZmOTM3MjVlXkEyXkFqcGdeQWpnYW1i._V1_.jpg",
-    labelColor: "#00C890",
-    category: "Программирование",
-  },
-];
-
 const header = {
-  title: "Lorem ipsum dolor sit amet",
+  title: "Studiac, Learn Differently!",
   subtitle:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad.",
-  image: "./assets/landing_page_asset1.svg",
+    "Checking out the subjects? We are pledgebound to bring innovative ways to help you learn the subjects you love!",
+  image: "./assets/subjects_page_asset2.svg",
 };
 
 const faq = [
   {
-    title: "Lorem ipsum dolor sit ipsum sit?",
-    body: "This text is ***really important***.",
+    title: "How do I sign up for Studiac?",
+    body: "Creating Accounts in Studiac is *free*. All you need is to set up an account using your email address. We recommend to use stronger passwords as well. You can also create an account using your Google account. ",
   },
   {
-    title: "Lorem ipsum dolor sit ipsum sit?",
-    body: "body",
+    title: "Do I get access to all the contents without payment?",
+    body: "After signing up, you can set up your profile. If you have completed creating the account, you can view specific topics of specific chapters of the subjects. In order to see the entire content of the chapters, you need to subscribe.",
   },
   {
-    title: "Lorem ipsum dolor sit ipsum sit?",
-    body: "body",
+    title: "How to make payment in Studiac?",
+    body: "You can use digital wallet payment systems such as Bkash, Rocket, Nagad, NexusPay, and Card Payment systems to subscribe at Studiac.",
   },
   {
-    title: "Lorem ipsum dolor sit ipsum sit?",
-    body: "body",
-  },
-  {
-    title: "Lorem ipsum dolor sit ipsum sit?",
-    body: "body",
+    title:
+      "What if a chapter is included in my school’s syllabus but Studiac does not have the module for that chapter yet?",
+    body: "In some cases, your school or college can include a chapter in the syllabus of your exam which is not available currently in Studiac. If you want to access the contents of that chapter, you can request for content at Studiac. We will review your request and then provide you with the content.",
   },
 ];
 
@@ -171,7 +127,7 @@ const SubjectsPage = () => {
   // check which classes are available in subjects
   const dropdownClasses = getAvailableClasses(subjects);
 
-  const onFilterSelect = (selected) => { 
+  const onFilterSelect = (selected) => {
     if (selected) {
       if (selected === "All") {
         setFilterSubjects(subjects);
@@ -181,7 +137,7 @@ const SubjectsPage = () => {
         );
       }
     }
-  }; 
+  };
 
   return (
     <>
@@ -231,7 +187,7 @@ const SubjectsPage = () => {
           <div style={{ marginTop: theme.spacing(3) }}>
             <OurSubjects subjects={filteredSubjects || subjects} />
           </div>
-        </Container> 
+        </Container>
 
         {/* Join For Free */}
         <div

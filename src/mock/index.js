@@ -66,41 +66,40 @@ const subjects = [
 
 const tiers = [
   {
-    title: "Free",
+    title: "Demonstration",
     description: [
-      "10 users included",
-      "2 GB of storage",
-      "Help center access",
-      "Email support",
+      "Demonstration ",
+      "of the practical  ",
+      "experiments mentioned in your books",
     ],
     buttonText: "Learn More",
     buttonVariant: "outlined",
-    icon: "https://i.pinimg.com/originals/01/ff/6e/01ff6e574c13777522d7a4d88c0a53a8.jpg",
+    icon: "https://avatars.dicebear.com/api/gridy/6655.svg",
     navigateUrl: "/learn-more",
   },
   {
-    title: "Pro",
+    title: "Relevance",
     subheader: "Most popular",
     description: [
-      "20 users included",
-      "10 GB of storage",
-      "Help center access",
-      "Priority email support",
+      "Other subjects are ",
+      "connected with the topic you ",
+      "are reading to help ",
+      "you understand concepts better",
     ],
     buttonText: "Get Started",
-    icon: "https://i.pinimg.com/originals/01/ff/6e/01ff6e574c13777522d7a4d88c0a53a8.jpg",
+    icon: "https://avatars.dicebear.com/api/gridy/61.svg",
     buttonVariant: "contained",
     navigateUrl: "/sign-up",
   },
   {
-    title: "Enterprise",
+    title: "DIY",
     description: [
-      "50 users included",
-      "30 GB of storage",
-      "Help center access",
-      "Phone & email support",
+      "Instructions for conducting ",
+      "experiments with ",
+      "homemade stuff are ",
+      "there too!",
     ],
-    icon: "https://i.pinimg.com/originals/01/ff/6e/01ff6e574c13777522d7a4d88c0a53a8.jpg",
+    icon: "https://avatars.dicebear.com/api/gridy/523.svg",
     buttonText: "Contact Us",
     buttonVariant: "outlined",
     navigateUrl: "/contact-us",
@@ -108,24 +107,24 @@ const tiers = [
 ];
 
 const header = {
-  title: "Lorem ipsum dolor sit amet",
-  subtitle:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad.",
+  title: "Welcome to Studiac!",
+  subtitle: `With Studiac, you will be able to learn your subjects differently by the help of practical experiments and STEAM learning. 
+  Come and set sail for your amazing journey!`,
   image: "./assets/landing_page_asset1.svg",
 };
 
 const community = [
   {
-    title: "Community 1",
-    image: "https://source.unsplash.com/random",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    title: "Sadman Ahammed (Class 5)",
+    image: "https://avatars.dicebear.com/api/avataaars/5.svg",
+    body: "Studiac has helped me develop a strong base on the subjects which seemed a bit problematic for me in the beginning such as General Science. The way the instructors conducted the experiments helped me gain more depth in theories mentioned in the books and I also got inspired to learn more on the topics of the books.",
     category: "Category 1",
     labelColor: "#162874",
   },
   {
-    title: "Community 1",
-    image: "https://source.unsplash.com/random",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    title: "Sumaiya Kabir Auntika (Class 7)",
+    image: "https://avatars.dicebear.com/api/avataaars/10.svg",
+    body: "STUDIAC has been vital in helping me understand the topic of the books from different perspectives and angles, something which I think is absent in our day to day classes. My critical thinking skills are surely developing. Thanks STUDIAC!",
     category: "Category 1",
     labelColor: "#162874",
   },

@@ -102,10 +102,10 @@ const RightChild = ({ item }) => {
     <Card className={classes.root} elevation={0}>
       <div className={classes.details}>
         <CardContent className={classes.content}>
-          <Typography variant="h4" color="textPrimary">
+          <Typography variant="h4" color="textPrimary" align="right">
             {item.title}
           </Typography>
-          <Typography variant="body1" color="textSecondary">
+          <Typography variant="body1" color="textSecondary" align="right">
             {item.body}
           </Typography>
         </CardContent>

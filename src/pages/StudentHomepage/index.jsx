@@ -109,11 +109,10 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-
 const header = {
-  title: "Lorem ipsum dolor sit amet",
+  title: "Pick Up where you left off!",
   subtitle:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad.",
+    "Studiac attempts to help you learn the contents of your book and with its modules, connect you to the real world facts and situations.",
 };
 
 const userRecentWatch = {
@@ -129,7 +128,6 @@ const userRecentWatch = {
 
 sed do eiusmod tempor  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor empor `,
 };
-
 
 const StudentHomepage = () => {
   const theme = useTheme();

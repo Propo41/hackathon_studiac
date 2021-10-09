@@ -154,7 +154,7 @@ function SignInSide() {
                 style={{ color: theme.palette.navyblue }}
                 align="left"
               >
-                Lorem ipsum dolor sit amet
+                Welcome back, learner!
               </Typography>
               <Typography
                 variant="h5"
@@ -164,9 +164,7 @@ function SignInSide() {
                   marginTop: theme.spacing(2),
                 }}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua ut
-                enim ad.
+                Sign up asap, discover what’s new and give a head start!
               </Typography>
             </div>
           </Hidden>

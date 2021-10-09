@@ -5,15 +5,16 @@ const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.navyblue,
     backgroundColor: theme.palette.lightgreen,
+    textAlign: "center",
   },
 }));
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary">
+    <Typography variant="body2" color="textPrimary">
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        Studiac
       </Link>
       {new Date().getFullYear()}
     </Typography>
@@ -33,9 +34,9 @@ const Footer = () => {
       }}
     >
       <Container maxWidth="sm">
-        <Typography variant="body1">
+        {/*      <Typography variant="body1">
           My sticky footer can be found here.
-        </Typography>
+        </Typography> */}
         <Copyright />
       </Container>
     </Box>

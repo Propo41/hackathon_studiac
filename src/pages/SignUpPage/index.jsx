@@ -20,11 +20,9 @@ import alertMaker from "../../utils/alertMaker";
 import Loading from "../../components/Loading";
 
 const signUpPageContent = {
-  title: "Lorem ipsum dolor sit amet",
+  title: "Embark on this amazing journey!",
   subtitle: `
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-  eiusmod tempor incididunt ut labore et dolore magna aliqua ut
-  enim ad.`,
+  Making the commitment and staying determined is what matters! We are always here to guide you, what we need from you is the determination!`,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -281,7 +279,7 @@ function SignUpPage() {
                     navigate("/sign-in");
                   }}
                 >
-                  Sign in with Google
+                  Log back In
                 </Button>
 
                 {alert && (
