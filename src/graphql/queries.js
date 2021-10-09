@@ -87,11 +87,27 @@ const VIEW_CLASSES = gql`
   }
 `;
 
+const VIEW_CLASS_CONTRIBUTOR_LIST = gql`
+  query MyQuery {
+    Class {
+      name
+      id
+      color_code
+    }
+    Contributor {
+      id
+      name
+      designation
+    }
+  }
+`;
+
 export {
   VIEW_USERS,
   VIEW_CONTRIBUTORS,
   VIEW_SUBJECTS,
   VIEW_RECEIPTS,
   VIEW_ENROLLMENTS,
+  VIEW_CLASS_CONTRIBUTOR_LIST,
   VIEW_CLASSES,
 };

@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddContributorForm = () => {
+const AddContributorForm = (props) => {
   const classes = useStyles();
   const { control } = useFormContext();
   const [contributorList, setContributorList] = useState(null);
@@ -98,6 +98,7 @@ const AddContributorForm = () => {
     // };
 
     const newContributors = [...selectedContributors, form.contributor];
+    props.setContributorInfo(newContributors);
     setSelectedContributors(newContributors);
   };
 
@@ -119,10 +120,9 @@ const AddContributorForm = () => {
           {selectedContributors &&
             selectedContributors.map((item, index) => {
               return (
-                <>
-                  {console.log(item.name)}
+                <div key={index}>
                   <ListItemContributor key={index} contributor={item} />
-                </>
+                </div>
               );
             })}
         </List>
