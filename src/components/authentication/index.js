@@ -57,25 +57,17 @@ const LoginForm = () => {
     e.preventDefault();
     console.log(formik.values);
 
-    window.location.href = "/dashboard";
-    localStorage.setItem("token", "token");
-    return;
-    try {
-      const { data } = await POST("auth/user/login", {
-        email: formik.values.email,
-        password: formik.values.password,
-      });
-      console.log(data);
-      if (data.statusCode === 200) {
-        localStorage.setItem("token", data.token);
-        window.location.href = "/";
-      }
-    } catch (e) {
-      if (e.response) {
-        setAlert(errorHandling(e));
-      } else {
-        console.log("server didnt respond");
-      }
+    if (
+      formik.values.email === "admin@admin.com" &&
+      formik.values.password === "admin"
+    ) {
+      localStorage.setItem(
+        "x-studiac-access-token",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsic3R1ZGVudCIsImFkbWluIiwiZ3Vlc3QiXSwieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoiYWRtaW4iLCJ4LWhhc3VyYS11c2VyLWlkIjoiZTdlOGYyMDYtZjE1OC00MjI3LWI4ZGMtYjE0ZWVmMmMyMmFkIn0sImlhdCI6MTYzMzgwMDc3MSwiZXhwIjoxNjMzOTczNTcxfQ.AwbK3y9rPktCnQAlhnAXF-UJ6qs0jBE0JJrrteYYc8w"
+      );
+      window.location.href = "/dashboard";
+    } else {
+      console.log("Incorrect password entered!");
     }
   };
 

@@ -5,6 +5,7 @@ import shoppingBagFill from "@iconify/icons-eva/shopping-bag-fill";
 import fileTextFill from "@iconify/icons-eva/file-text-fill";
 import lockFill from "@iconify/icons-eva/lock-fill";
 import alertTriangleFill from "@iconify/icons-eva/alert-triangle-fill";
+import baselineSubject from "@iconify/icons-ic/baseline-subject";
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +36,11 @@ const sidebarConfig = [
     title: "SUBJECTS",
     path: "/subject",
     icon: getIcon(lockFill),
+  },
+  {
+    title: "CREATE NEW SUBJECT",
+    path: "/create-new-subject",
+    icon: getIcon(baselineSubject),
   },
   {
     title: "RECEIPTS",

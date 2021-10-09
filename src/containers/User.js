@@ -37,6 +37,8 @@ import Fade from "@material-ui/core/Fade";
 import USERS from "../_mocks_/user";
 import { DELETE_AUTH, GET, GET_AUTH } from "../api/api";
 import CreateUserModal from "../components/CreateUserModal";
+import { useQuery } from "@apollo/client";
+import { VIEW_USERS } from "../graphql/queries";
 
 const TABLE_HEAD = [
   { id: "id", label: "Id", alignRight: false },
@@ -80,7 +82,7 @@ function applySortFilter(array, comparator, query) {
   }
   return stabilizedThis.map((el) => el[0]);
 }
-const dummydata = [
+var users = [
   {
     id: 123,
     email: "ahnaf@gmail.com",
@@ -106,6 +108,7 @@ const dummydata = [
     isVerified: true,
   },
 ];
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -119,6 +122,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 6, 4),
   },
 }));
+
 export default function User() {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -127,113 +131,24 @@ export default function User() {
   const [orderBy, setOrderBy] = useState("email");
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [users, setUsers] = useState(dummydata);
-  const [loading, setLoading] = useState(false);
   const [editUser, setEditUser] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const exe = async () => {
-  //     try {
-  //       const { data } = await GET_AUTH(`admin/users`);
-  //       if (isMounted) {
-  //         setUsers(data);
-  //         console.log("all promises resolved");
-  //         console.log(data);
-  //         setLoading(false);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //       console.log("error", e);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   exe();
-  //   return () => {
-  //     isMounted = false;
-  //   }; // cleanup toggles value, if unmounted
-  // }, []);
+  const { loading, error, data } = useQuery(VIEW_USERS);
 
-  //setUsers(dummydata);
+  if (loading) return <div>Loading</div>;
+  if (error) {
+    console.log(error);
+    return <div>Error</div>;
+  }
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
+  console.log(data);
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.email);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
+  users = data.User;
 
   const onNewClick = () => {
     console.log("Clicked");
     setOpen(true);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
-  };
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
-
-  const filteredUsers = applySortFilter(
-    users,
-    getComparator(order, orderBy),
-    filterName
-  );
-
-  const isUserNotFound = filteredUsers.length === 0;
-
-  const onDeleteClick = async (id) => {
-    console.log(id);
-    console.log("on delete click");
-
-    try {
-      var formData = new FormData();
-      formData.append("id", id);
-      const { data } = await DELETE_AUTH(`admin/user`, formData);
-      console.log(data);
-      // setLoading(false);
-    } catch (e) {
-      console.log(e);
-      console.log("error", e);
-      // setLoading(false);
-    }
   };
 
   const onEditClick = async (id) => {
@@ -277,7 +192,6 @@ export default function User() {
           <UserListToolbar
             numSelected={selected.length}
             filterName={filterName}
-            onFilterName={handleFilterByName}
           />
 
           <Scrollbar>
@@ -289,11 +203,9 @@ export default function User() {
                   headLabel={TABLE_HEAD}
                   rowCount={users.length}
                   numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers
+                  {users
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const {
@@ -346,30 +258,12 @@ export default function User() {
                             </Label>
                           </TableCell>
                           <TableCell align="right">
-                            <UserMoreMenu
-                              onDeleteClick={onDeleteClick}
-                              onEditClick={onEditClick}
-                              id={id}
-                            />
+                            <UserMoreMenu onEditClick={onEditClick} id={id} />
                           </TableCell>
                         </TableRow>
                       );
                     })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
                 </TableBody>
-                {isUserNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
               </Table>
             </TableContainer>
           </Scrollbar>
@@ -380,8 +274,6 @@ export default function User() {
             count={users.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
       </Container>

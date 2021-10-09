@@ -8,6 +8,8 @@ Logo.propTypes = {
   sx: PropTypes.object,
 };
 
+/* app logo */
+
 export default function Logo({ sx }) {
   return (
     <Box

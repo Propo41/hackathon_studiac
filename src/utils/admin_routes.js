@@ -8,6 +8,7 @@ import Receipt from "../containers/Receipt";
 import Contributor from "../containers/Contributor";
 import Enrollment from "../containers/Enrollment";
 import Class_ from "../containers/Class_";
+import CreateNewSubject from "../containers/CreateNewSubject";
 
 export default function Router() {
   return useRoutes([
@@ -24,6 +25,8 @@ export default function Router() {
         { path: "receipt", element: <Receipt /> },
         { path: "enrollment", element: <Enrollment /> },
         { path: "class", element: <Class_ /> },
+        { path: "create-new-subject", element: <CreateNewSubject /> },
+
       ],
     },
     {
