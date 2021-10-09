@@ -7,8 +7,8 @@ const VIEW_USERS = gql`
       id
       username
       role
-      createdat:created_at
-      isVerified:is_verified
+      createdat: created_at
+      isVerified: is_verified
     }
   }
 `;
@@ -48,6 +48,11 @@ const VIEW_RECEIPTS = gql`
       total
       is_processed
       subscription_date
+      Payment {
+        payment_gateway
+        transaction_id
+        phone_number
+      }
       Class {
         name
         color_code
@@ -65,7 +70,7 @@ const VIEW_ENROLLMENTS = gql`
       status: is_active
       class_id
       User {
-        email
+        username
         id
       }
     }

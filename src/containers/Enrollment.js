@@ -26,8 +26,8 @@ import {
   ReportListToolbar,
   ReportMoreMenu,
 } from "../components/report";
-
-import { DELETE_AUTH, GET, GET_AUTH } from "../api/api";
+import { useQuery } from "@apollo/client";
+import { VIEW_ENROLLMENTS } from "../graphql/queries";
 
 const TABLE_HEAD = [
   { id: "id", label: "User Id", alignRight: false },
@@ -72,29 +72,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const dummydata = [
-  {
-    id: 123,
-    userName: "ahnaf",
-    subscriptionDate: "pagol",
-    enrolledTo: "12/2/40",
-    status: true,
-  },
-  {
-    id: 124,
-    userName: "ahnaf",
-    subscriptionDate: "pagol",
-    enrolledTo: "12/2/40",
-    status: true,
-  },
-  {
-    id: 125,
-    userName: "ahnaf",
-    subscriptionDate: "pagol",
-    enrolledTo: "12/2/40",
-    status: true,
-  },
-];
+var enrollment = [];
 export default function Enrollment(props) {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
@@ -102,31 +80,18 @@ export default function Enrollment(props) {
   const [orderBy, setOrderBy] = useState("contactEmail");
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [reports, setReports] = useState(dummydata);
-  const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const exe = async () => {
-  //     try {
-  //       const { data } = await GET_AUTH(`admin/reports`);
-  //       if (isMounted) {
-  //         setReports(data);
-  //         console.log("all promises resolved");
-  //         console.log(data);
-  //         setLoading(false);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //       console.log("error", e);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   exe();
-  //   return () => {
-  //     isMounted = false;
-  //   }; // cleanup toggles value, if unmounted
-  // }, []);
+  const { loading, error, data } = useQuery(VIEW_ENROLLMENTS);
+
+  if (loading) return <div>Loading</div>;
+  if (error) {
+    console.log(error);
+    return <div>Error</div>;
+  }
+
+  console.log(data);
+
+  enrollment = data.Enrollment;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -136,29 +101,11 @@ export default function Enrollment(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = reports.map((n) => n.contactEmail);
+      const newSelecteds = enrollment.map((n) => n.contactEmail);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -175,15 +122,9 @@ export default function Enrollment(props) {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reports.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - enrollment.length) : 0;
 
-  const filteredReports = applySortFilter(
-    reports,
-    getComparator(order, orderBy),
-    filterName
-  );
-
-  const isReportNotFound = filteredReports.length === 0;
+  const isReportNotFound = enrollment.length === 0;
 
   if (loading) {
     return <h>Loading</h>;
@@ -217,22 +158,17 @@ export default function Enrollment(props) {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={reports.length}
+                  rowCount={enrollment.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredReports
+                  {enrollment
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const {
-                        id,
-                        userName,
-                        subscriptionDate,
-                        enrolledTo,
-                        status,
-                      } = row;
+                      const { id, User, subscription_date, class_id, status } =
+                        row;
                       const isItemSelected = selected.indexOf(id) !== -1;
 
                       return (
@@ -260,9 +196,11 @@ export default function Enrollment(props) {
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{userName}</TableCell>
-                          <TableCell align="left">{subscriptionDate}</TableCell>
-                          <TableCell align="left">{enrolledTo}</TableCell>
+                          <TableCell align="left">{User.username}</TableCell>
+                          <TableCell align="left">
+                            {subscription_date}
+                          </TableCell>
+                          <TableCell align="left">{class_id}</TableCell>
 
                           <TableCell align="left">
                             <Label
@@ -302,7 +240,7 @@ export default function Enrollment(props) {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={reports.length}
+            count={enrollment.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

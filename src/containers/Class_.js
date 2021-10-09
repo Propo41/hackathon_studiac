@@ -27,14 +27,13 @@ import {
   ReportMoreMenu,
 } from "../components/report";
 
-import { DELETE_AUTH, GET, GET_AUTH } from "../api/api";
+import { useQuery } from "@apollo/client";
+import { VIEW_CLASSES } from "../graphql/queries";
 
 const TABLE_HEAD = [
   { id: "id", label: "Id", alignRight: false },
   { id: "classname", label: "Class Name", alignRight: false },
   { id: "colorCode", label: "Color Code", alignRight: false },
-  { id: "fee", label: "Fee", alignRight: false },
-  { id: "discount", label: "Discount", alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -49,52 +48,7 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(
-      array,
-      (_user) =>
-        _user.contactEmail.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
-  }
-  return stabilizedThis.map((el) => el[0]);
-}
-
-const dummydata = [
-  {
-    id: 123,
-    classname: "ahnaf",
-    colorCode: "pagol",
-    fee: 500,
-    discount: 1000,
-  },
-  {
-    id: 124,
-    classname: "ahnaf",
-    colorCode: "pagol",
-    fee: 500,
-    discount: 1000,
-  },
-  {
-    id: 125,
-    classname: "ahnaf",
-    colorCode: "pagol",
-    fee: 500,
-    discount: 1000,
-  },
-];
+var class_ = [];
 export default function Class_(props) {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
@@ -102,31 +56,18 @@ export default function Class_(props) {
   const [orderBy, setOrderBy] = useState("contactEmail");
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [reports, setReports] = useState(dummydata);
-  const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const exe = async () => {
-  //     try {
-  //       const { data } = await GET_AUTH(`admin/reports`);
-  //       if (isMounted) {
-  //         setReports(data);
-  //         console.log("all promises resolved");
-  //         console.log(data);
-  //         setLoading(false);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //       console.log("error", e);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   exe();
-  //   return () => {
-  //     isMounted = false;
-  //   }; // cleanup toggles value, if unmounted
-  // }, []);
+  const { loading, error, data } = useQuery(VIEW_CLASSES);
+
+  if (loading) return <div>Loading</div>;
+  if (error) {
+    console.log(error);
+    return <div>Error</div>;
+  }
+
+  console.log(data);
+
+  class_ = data.Class;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -136,29 +77,11 @@ export default function Class_(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = reports.map((n) => n.contactEmail);
+      const newSelecteds = class_.map((n) => n.contactEmail);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -175,15 +98,9 @@ export default function Class_(props) {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reports.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - class_.length) : 0;
 
-  const filteredReports = applySortFilter(
-    reports,
-    getComparator(order, orderBy),
-    filterName
-  );
-
-  const isReportNotFound = filteredReports.length === 0;
+  const isReportNotFound = class_.length === 0;
 
   if (loading) {
     return <h>Loading</h>;
@@ -217,16 +134,16 @@ export default function Class_(props) {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={reports.length}
+                  rowCount={class_.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredReports
+                  {class_
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, classname, colorCode, fee, discount } = row;
+                      const { id, name, color_code } = row;
                       const isItemSelected = selected.indexOf(id) !== -1;
 
                       return (
@@ -254,10 +171,8 @@ export default function Class_(props) {
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{classname}</TableCell>
-                          <TableCell align="left">{colorCode}</TableCell>
-                          <TableCell align="left">{fee}</TableCell>
-                          <TableCell align="left">{discount}</TableCell>
+                          <TableCell align="left">{name}</TableCell>
+                          <TableCell align="left">{color_code}</TableCell>
 
                           <TableCell align="right">
                             <ReportMoreMenu report={row} />
@@ -287,7 +202,7 @@ export default function Class_(props) {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={reports.length}
+            count={class_.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

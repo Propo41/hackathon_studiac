@@ -26,8 +26,8 @@ import {
   ReportListToolbar,
   ReportMoreMenu,
 } from "../components/report";
-
-import { DELETE_AUTH, GET, GET_AUTH } from "../api/api";
+import { useQuery } from "@apollo/client";
+import { VIEW_RECEIPTS } from "../graphql/queries";
 
 const TABLE_HEAD = [
   { id: "id", label: "User Id", alignRight: false },
@@ -35,7 +35,7 @@ const TABLE_HEAD = [
   { id: "transactionId", label: "Transaction ID", alignRight: false },
   { id: "paymentMethod", label: "Payment Method", alignRight: false },
   { id: "amountSent", label: "Amount Sent", alignRight: false },
-  { id: "classname", label: "Class", alignRight: false },
+  { id: "Class", label: "Class", alignRight: false },
   { id: "status", label: "Status", alignRight: false },
 ];
 
@@ -74,35 +74,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const dummydata = [
-  {
-    id: 123,
-    phoneNumber: "ahnaf",
-    transacyionId: "pagol",
-    paymentMethod: "12/2/40",
-    amountSent: 100,
-    classname: 3,
-    status: true,
-  },
-  {
-    id: 124,
-    phoneNumber: "ahnaf",
-    transacyionId: "pagol",
-    paymentMethod: "12/2/40",
-    amountSent: 100,
-    classname: 3,
-    status: false,
-  },
-  {
-    id: 125,
-    phoneNumber: "ahnaf",
-    transacyionId: "pagol",
-    paymentMethod: "12/2/40",
-    amountSent: 100,
-    classname: 3,
-    status: true,
-  },
-];
+var receipt = [];
 export default function Receipt(props) {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
@@ -110,8 +82,18 @@ export default function Receipt(props) {
   const [orderBy, setOrderBy] = useState("contactEmail");
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [reports, setReports] = useState(dummydata);
-  const [loading, setLoading] = useState(false);
+
+  const { loading, error, data } = useQuery(VIEW_RECEIPTS);
+
+  if (loading) return <div>Loading</div>;
+  if (error) {
+    console.log(error);
+    return <div>Error</div>;
+  }
+
+  console.log(data);
+
+  receipt = data.Reciept;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -121,29 +103,11 @@ export default function Receipt(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = reports.map((n) => n.contactEmail);
+      const newSelecteds = receipt.map((n) => n.contactEmail);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -160,15 +124,9 @@ export default function Receipt(props) {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reports.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - receipt.length) : 0;
 
-  const filteredReports = applySortFilter(
-    reports,
-    getComparator(order, orderBy),
-    filterName
-  );
-
-  const isReportNotFound = filteredReports.length === 0;
+  const isReportNotFound = receipt.length === 0;
 
   if (loading) {
     return <h>Loading</h>;
@@ -202,23 +160,22 @@ export default function Receipt(props) {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={reports.length}
+                  rowCount={receipt.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredReports
+                  {receipt
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const {
                         id,
-                        phoneNumber,
-                        transacyionId,
-                        paymentMethod,
-                        amountSent,
-                        classname,
-                        status,
+                        Payment,
+
+                        total,
+                        Class,
+                        is_processed,
                       } = row;
                       const isItemSelected = selected.indexOf(id) !== -1;
 
@@ -247,19 +204,30 @@ export default function Receipt(props) {
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{phoneNumber}</TableCell>
-                          <TableCell align="left">{transacyionId}</TableCell>
-                          <TableCell align="left">{paymentMethod}</TableCell>
-                          <TableCell align="left">{amountSent}</TableCell>
-                          <TableCell align="left">{classname}</TableCell>
+
+                          <TableCell align="left">
+                            {Payment && Payment.phone_number}
+                          </TableCell>
+                          <TableCell align="left">
+                            {Payment && Payment.transaction_id}
+                          </TableCell>
+                          <TableCell align="left">
+                            {Payment && Payment.payment_gateway}
+                          </TableCell>
+                          <TableCell align="left">{total}</TableCell>
+                          <TableCell align="left">{Class.name}</TableCell>
 
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color={(status === false && "error") || "success"}
+                              color={
+                                (is_processed === false && "error") || "success"
+                              }
                             >
                               {sentenceCase(
-                                status === true ? "Approved" : "Not Approved"
+                                is_processed === true
+                                  ? "Approved"
+                                  : "Not Approved"
                               )}
                             </Label>
                           </TableCell>
@@ -291,7 +259,7 @@ export default function Receipt(props) {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={reports.length}
+            count={receipt.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

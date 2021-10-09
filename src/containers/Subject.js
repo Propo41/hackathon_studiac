@@ -26,14 +26,14 @@ import {
   ApplicantMoreMenu,
 } from "../components/applicant";
 
-import { DELETE_AUTH, GET, GET_AUTH } from "../api/api";
+import { useQuery } from "@apollo/client";
+import { VIEW_SUBJECTS } from "../graphql/queries";
 
 const TABLE_HEAD = [
   { id: "id", label: "Id", alignRight: false },
   { id: "title", label: "Title", alignRight: false },
-  { id: "subjectCode", label: "Subject Code", alignRight: false },
+
   { id: "classname", label: "Class", alignRight: false },
-  { id: "createdat", label: "Created At", alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -48,50 +48,24 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(
-      array,
-      (_user) =>
-        _user.contactEmail.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
-  }
-  return stabilizedThis.map((el) => el[0]);
-}
-
-const dummydata = [
+var subject = [
   {
     id: 123,
     title: "ahnaf@gmail.com",
-    subjectCode: "ahnaf",
-    classname: "pagol",
-    createdat: "12/2/40",
+
+    Class: "pagol",
   },
   {
     id: 124,
     title: "ahnaf@gmail.com",
-    subjectCode: "ahnaf",
-    classname: "pagol",
-    createdat: "12/2/40",
+
+    Class: "pagol",
   },
   {
     id: 125,
     title: "ahnaf@gmail.com",
-    subjectCode: "ahnaf",
-    classname: "pagol",
-    createdat: "12/2/40",
+
+    Class: "pagol",
   },
 ];
 
@@ -102,31 +76,18 @@ export default function Subject(props) {
   const [orderBy, setOrderBy] = useState("contactEmail");
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [applicants, setApplicants] = useState(dummydata);
-  const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const exe = async () => {
-  //     try {
-  //       const { data } = await GET_AUTH(`admin/applicants`);
-  //       if (isMounted) {
-  //         setApplicants(data);
-  //         console.log("all promises resolved");
-  //         console.log(data);
-  //         setLoading(false);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //       console.log("error", e);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   exe();
-  //   return () => {
-  //     isMounted = false;
-  //   }; // cleanup toggles value, if unmounted
-  // }, []);
+  const { loading, error, data } = useQuery(VIEW_SUBJECTS);
+
+  if (loading) return <div>Loading</div>;
+  if (error) {
+    console.log(error);
+    return <div>Error</div>;
+  }
+
+  console.log(data);
+
+  subject = data.Subject;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -136,29 +97,11 @@ export default function Subject(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = applicants.map((n) => n.contactEmail);
+      const newSelecteds = subject.map((n) => n.contactEmail);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -175,15 +118,9 @@ export default function Subject(props) {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - applicants.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - subject.length) : 0;
 
-  const filteredApplicants = applySortFilter(
-    applicants,
-    getComparator(order, orderBy),
-    filterName
-  );
-
-  const isApplicantNotFound = filteredApplicants.length === 0;
+  const isApplicantNotFound = subject.length === 0;
 
   if (loading) {
     return <h>Loading</h>;
@@ -217,17 +154,16 @@ export default function Subject(props) {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={applicants.length}
+                  rowCount={subject.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredApplicants
+                  {subject
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, title, subjectCode, classname, createdat } =
-                        row;
+                      const { id, title, Class } = row;
                       const isItemSelected = selected.indexOf(id) !== -1;
 
                       return (
@@ -256,9 +192,8 @@ export default function Subject(props) {
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{title}</TableCell>
-                          <TableCell align="left">{subjectCode}</TableCell>
-                          <TableCell align="left">{classname}</TableCell>
-                          <TableCell align="left">{createdat}</TableCell>
+
+                          <TableCell align="left">{Class.name}</TableCell>
 
                           <TableCell align="right">
                             <ApplicantMoreMenu applicant={row} />
@@ -288,7 +223,7 @@ export default function Subject(props) {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={applicants.length}
+            count={subject.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

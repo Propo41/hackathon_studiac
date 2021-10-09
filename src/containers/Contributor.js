@@ -35,9 +35,8 @@ import {
   CompanyListToolbar,
   CompanyMoreMenu,
 } from "../components/company";
-
-import USERS from "../_mocks_/user";
-import { DELETE_AUTH, GET, GET_AUTH } from "../api/api";
+import { useQuery } from "@apollo/client";
+import { VIEW_CONTRIBUTORS } from "../graphql/queries";
 
 const TABLE_HEAD = [
   { id: "id", label: "Id", alignRight: false },
@@ -81,7 +80,7 @@ function applySortFilter(array, comparator, query) {
   }
   return stabilizedThis.map((el) => el[0]);
 }
-const dummydata = [
+var contributor = [
   {
     id: 123,
     name: "ahnaf",
@@ -125,65 +124,20 @@ export default function Contributor() {
   const [orderBy, setOrderBy] = useState("name");
   const [filterName, setFilterName] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [companies, setCompanies] = useState(dummydata);
-  const [loading, setLoading] = useState(false);
+
   const [open, setOpen] = useState(false);
 
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const exe = async () => {
-  //     try {
-  //       const { data } = await GET_AUTH(`admin/companies`);
-  //       if (isMounted) {
-  //         setCompanies(data);
-  //         console.log("all promises resolved");
-  //         console.log(data);
-  //         setLoading(false);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //       console.log("error", e);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   exe();
-  //   return () => {
-  //     isMounted = false;
-  //   }; // cleanup toggles value, if unmounted
-  // }, []);
+  const { loading, error, data } = useQuery(VIEW_CONTRIBUTORS);
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
+  if (loading) return <div>Loading</div>;
+  if (error) {
+    console.log(error);
+    return <div>Error</div>;
+  }
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = companies.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  console.log(data);
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
+  contributor = data.Contributor;
 
   const onNewClick = () => {
     console.log("Clicked");
@@ -203,15 +157,7 @@ export default function Contributor() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - companies.length) : 0;
-
-  const filteredCompanies = applySortFilter(
-    companies,
-    getComparator(order, orderBy),
-    filterName
-  );
-
-  const isCompanyNotFound = filteredCompanies.length === 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - contributor.length) : 0;
 
   if (loading) {
     return <h>Loading</h>;
@@ -253,13 +199,11 @@ export default function Contributor() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={companies.length}
+                  rowCount={contributor.length}
                   numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredCompanies
+                  {contributor
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const { name, id, designation, biography, experience } =
@@ -308,22 +252,13 @@ export default function Contributor() {
                     </TableRow>
                   )}
                 </TableBody>
-                {isCompanyNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
               </Table>
             </TableContainer>
           </Scrollbar>
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={companies.length}
+            count={contributor.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
