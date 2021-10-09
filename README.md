@@ -1,52 +1,70 @@
-# InternFinder
+# Getting Started with Create React App
 
-### Getting Started
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-First clone the repository. Then open a new terminal.
-```bash 
-$ cd .\ClientApp\ 
-$ npm install
-$ cd ..
-$ dotnet watch run
-```
+## Available Scripts
 
-### Packages used
-To install a package using the dotnet CLI:  `dotnet add package <package-name>`
-- `MongoDB.Driver`
-- `Microsoft.AspNetCore.Authentication`
-- `Microsoft.AspNetCore.Authentication.JwtBearer`
-- `System.IdentityModel.Tokens.Jwt`
-- `SendGrid`
-- `BCrypt.Net-Next --version 4.0.2`
-- `Newtonsoft.Json --version 13.0.1`
+In the project directory, you can run:
 
-# IMPORTANT FOR PRODUCTION
-- all comments with @debug initials, remove them during production
+### `npm start`
 
-### Potential Errors
-- When running the program, an error `Microsoft.AspNetCore.SpaServices[0]: internal/modules/cjs/loader.js:883"` might pop up. Simply remove the node_modules folder and package-lock.json file
-- You need the file `appsettings.json` for the program to run.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-### Credentials
-Check <a href="https://docs.google.com/document/d/15o92_bAJAjbDGLN3EiKJ3iPX76xrkUo67c9FoZofb4Y/edit?usp=sharing">here</a>
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-### API List
-Check <a href="https://docs.google.com/spreadsheets/d/1Ift-x7HbfvzpTGgtjdmNcCYQPpZp9vUTZ0ohPxVUz8Y/edit?usp=sharing">here</a>
+### `npm test`
 
-### Note
-- When sending payloads to the server, consider 2 cases:
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-  1. When sending wholesome data models, such as in Registration page, CreateJob page etc, receive the payload as their corresponding models
-  2. But when sending edited data or partial data, such as sending only the jobID and status, send the data as FormData and receive the payload as IFormCollection in the server. (*But note that  According to FormData Documentation, FormData.append accepts only a USVString or a Blob. S you will have to convert your data to string and then parse it later on the backend. You can use JSON.stringify to convert your form object to a string.*)
+### `npm run build`
 
-References:
-- "https://stackoverflow.com/a/60800516/7570616"
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-### Stuff learned
-- learned the concept of <a href="https://deviq.com/principles/dependency-inversion-principle"><b>inverse dependency injection</b></a> by abstracting the service class implementations using interfaces to enable a less tightly coupled system. 
-- learned the concept of **buisness logic layers** by seperating the controller classes and the service classes. As a result, all the database calls and logic codes are kept abstract from the controller classses.
-- Learned dependency injections which is the process of sharing a particular resource across different classes.
-- Learned how authentications work behind the scenes with JWT tokens and middewares.
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-### Potential Security issues
-- password is directly sent from client to server which is then encoded. This increases the possibility of man-in-the-middle attacks
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
