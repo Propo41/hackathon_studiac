@@ -2,11 +2,13 @@
 
 Studiac, an e-learning platform, is the foremost web-based practical learning and solution for the students studying under the NCTB curriculum from grades 1 to 12. Studiac intends to create modules with the contents based on the textbooks of the students and through practical experiments which are mentioned in those textbooks and those which can be related to the topic. 
 
-These modules will help the students learn the practical aspect of learning science, helping them understand the theoretical concept with more depth and developing a deeper understanding of various phenomena.
+These modules will help the students learn the practical aspect of learning science, helping them understand the theoretical concept with more depth and developing a deeper understanding of various phenomena. Studiac wishes to help students learn the fun about science, assist them in understanding the importance of Science, and provide them with a platform that excites and encourages them to carry out their studies in Science.
 
-Students, after logging into Studiac by inputting their class and medium of education under NCTB, can browse through the subjects and go through the video modules arranged just like the content of their books. Not only this; the video modules will aim to enlighten the students on topics of Science, Technology, Engineering, Arts, and Mathematics that can be related to the topic they are learning, thus, ensuring that the students can look at a topic from multiple angles and subjects, enriching their critical thinking ability. 
 
-Studiac wishes to help students learn the fun about science, assist them in understanding the importance of Science, and provide them with a platform that excites and encourages them to carry out their studies in Science.
+[![react-ready](https://img.shields.io/badge/backend-nodeJs-green)](#)
+[![react-ready](https://img.shields.io/badge/frontend-react-blue)](#)
+[![react-ready](https://img.shields.io/badge/database-postgresql-informational)](#)
+
 
 ## The Team: Hackathon
 
