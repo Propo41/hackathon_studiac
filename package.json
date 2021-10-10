@@ -31,7 +31,7 @@
   "scripts": {
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "start": "npm run build && (cd server && npm start)",
+    "start": "cd server && npm start",
     "eject": "react-scripts eject",
     "server": "(cd server && npm start)",
     "client": "react-scripts start",
