@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const apiBaseURL = process.env.REACT_APP_REST_API_ENDPOINT;
+var apiBaseURL = process.env.REACT_APP_REST_API_ENDPOINT;
+
+if (process.env.REACT_APP_ENV !== "development") {
+  apiBaseURL = process.env.REACT_APP_REST_API_ENDPOINT_PRODUCTION;
+}
 console.log(apiBaseURL);
 
 /* public queries */
