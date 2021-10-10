@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === "development") {
   app.use(cors());
 }
 app.use(json({ limit: "50mb" }));
-app.use(express.static(join(__dirname, "..", "build")));
+app.use(express.static(join(__dirname, "build")));
 app.use(express.static("public"));
 
 app.use(urlencoded({ limit: "50mb", extended: true }));
@@ -24,7 +24,7 @@ app.use("/api", router);
 
 // serve react build files
 app.get("*", (req, res) => {
-  res.sendFile(join(__dirname, "..", "build", "index.html"));
+  res.sendFile(join(__dirname, "build", "index.html"));
 });
 
 // start express server on port 5000 or heroku port
