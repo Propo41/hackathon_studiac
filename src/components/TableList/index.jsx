@@ -80,7 +80,7 @@ export default function TableList(props) {
                       className={classes.column}
                       style={{
                         paddingLeft: theme.spacing(0),
-                        marginLeft: -250,
+                        marginLeft: 0,
                       }}
                     >
                       {row.name}

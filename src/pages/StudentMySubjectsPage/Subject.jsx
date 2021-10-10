@@ -27,6 +27,8 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     borderRadius: "inherit",
+    width: "250px"
+
   },
 }));
 

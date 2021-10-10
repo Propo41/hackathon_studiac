@@ -20,6 +20,7 @@ import { useQuery } from "@apollo/client";
 import { STUDENT_HOMEPAGE } from "../../graphql/queries";
 import getAvailableClasses from "../../utils/availableClasses";
 import ErrorPage from "../ErrorPage";
+import Aos from "aos";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;

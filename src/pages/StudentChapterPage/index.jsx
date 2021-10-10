@@ -240,7 +240,7 @@ const StudentChapterPage = () => {
                   paddingRight: theme.spacing(3),
                 }}
               >
-                {chapter.description}
+                {chapter.description.slice(0, 180) + "..."}
               </Typography>
             </Grid>
           </Container>

@@ -44,9 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
   headerBackground: {
     background: theme.palette.gradients.primary,
-    height: theme.spacing(90),
+    height: theme.spacing(100),
     [theme.breakpoints.down("md")]: {
-      height: theme.spacing(90),
+      height: theme.spacing(120),
     },
   },
   headerTitle: {

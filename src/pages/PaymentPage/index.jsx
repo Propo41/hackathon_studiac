@@ -72,10 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const procedure = `**Procedure**: dapibus eu euismod. Vestibulum dui nibh non convallis rhoncus.
-Sociis ullamcorper ut tincidunt massa dignissim nisi massa nunc.
-Posuere netus pharetra tristique nisl, suspendisse et. Sem purus
-sed d`;
+const procedure = `**Procedure**: Send money using Bkash at 0171429548623. Enter your Bkash Number and provide the transaction ID. Use your name, school and class in the reference. Once you have completed this form, the admin will verify the transaction and confirm successful payment. After confirmation, you can get access to the materials.`;
 
 const PaymentPage = () => {
   const theme = useTheme();
@@ -93,7 +90,7 @@ const PaymentPage = () => {
   });
 
   if (loading) {
-    return <CircularProgress />;
+    return <Loading />;
   }
   if (error) {
     return <ErrorPage description={error.message} />;

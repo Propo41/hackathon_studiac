@@ -9,12 +9,13 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Label from "../Label";
 import { useNavigate } from "react-router";
+import Aos from "aos";
 
 const useStyles = makeStyles({
   root: {
     cursor: "pointer",
     transition: "transform 0.3s ease-in-out",
-    // todo: add hover effect later
+
     "&:hover": {
       transform: "scale(1.02)",
       transition: "transform 0.2s ease-in-out",

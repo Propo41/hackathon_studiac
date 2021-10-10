@@ -52,6 +52,15 @@ function ErrorPage(props) {
   const classes = useStyles();
   const navigate = useNavigate();
 
+  // refresh the window after a delay
+  const refresh = () => {
+    setTimeout(() => {
+      localStorage.clear();
+      window.location.reload();
+    }, 1000);
+  };
+  refresh();
+
   return (
     <div>
       <Grid container component="main" style={{ height: "100vh" }}>

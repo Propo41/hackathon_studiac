@@ -28,6 +28,7 @@ import { SUBJECT_DETAILS } from "../../graphql/queries";
 import { useParams } from "react-router";
 import Loading from "../../components/Loading";
 import ErrorPage from "../ErrorPage";
+import Aos from "aos";
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
   headerBackground: {
     background: theme.palette.gradients.primary,
-    height: theme.spacing(90),
+    height: theme.spacing(100),
     [theme.breakpoints.down("md")]: {
       height: theme.spacing(90),
     },
@@ -99,6 +100,10 @@ const SubjectsDetailsPage = () => {
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width: 942px)");
+
+  React.useEffect(() => {
+    Aos.init({ duration: 1000 });
+  }, []);
 
   // get url params
   const { subjectId } = useParams();
@@ -166,6 +171,7 @@ const SubjectsDetailsPage = () => {
           sx={{ mt: 8, mb: 2 }}
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_SMALL) }}
+          data-aos="fade-up"
         >
           <Typography variant="h4" style={{ color: theme.palette.navyblue }}>
             Subject Overview
@@ -183,13 +189,21 @@ const SubjectsDetailsPage = () => {
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_SMALL) }}
         >
-          <Typography variant="h4" style={{ color: theme.palette.navyblue }}>
+          <Typography
+            variant="h4"
+            style={{ color: theme.palette.navyblue }}
+            data-aos="fade-up"
+          >
             Subject Contents
           </Typography>
           <div style={{ marginTop: theme.spacing(5) }}>
             {/* map rows */}
             {subject.Chapters.map((row, index) => (
-              <div key={index} style={{ marginTop: theme.spacing(1) }}>
+              <div
+                key={index}
+                style={{ marginTop: theme.spacing(1) }}
+                data-aos="fade-up"
+              >
                 <ExpandableList
                   title={row.title}
                   id={index}
@@ -208,14 +222,25 @@ const SubjectsDetailsPage = () => {
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_SMALL) }}
         >
-          <Typography variant="h4" style={{ color: theme.palette.navyblue }}>
+          <Typography
+            variant="h4"
+            style={{ color: theme.palette.navyblue }}
+            data-aos="fade-up"
+          >
             Other Subjects in this Class
           </Typography>
           <div style={{ marginTop: theme.spacing(5) }}>
             {/* map rows */}
             <Grid container spacing={3} alignItems="flex-end">
               {subject.Class.Subjects.map((subject) => (
-                <Grid item key={subject.id} xs={12} sm={6} md={4}>
+                <Grid
+                  item
+                  key={subject.id}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  data-aos="fade-up"
+                >
                   <SubjectFeatured
                     id={subject.id}
                     image={subject.image}
@@ -235,11 +260,18 @@ const SubjectsDetailsPage = () => {
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_SMALL) }}
         >
-          <Typography variant="h4" style={{ color: theme.palette.navyblue }}>
+          <Typography
+            variant="h4"
+            style={{ color: theme.palette.navyblue }}
+            data-aos="fade-up"
+          >
             Subject Creators
           </Typography>
 
-          <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
+          <div
+            style={{ marginTop: theme.spacing(GAP_SMALL) }}
+            data-aos="fade-up"
+          >
             <SubjectCreators creators={subject.SubjectContributors} />
           </div>
         </Container>

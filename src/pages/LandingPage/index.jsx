@@ -23,6 +23,8 @@ import { LANDING_PAGE } from "../../graphql/queries";
 import { community, header, tiers } from "../../mock";
 import Loading from "../../components/Loading";
 import ErrorPage from "../ErrorPage";
+import AOS from "aos";
+import "aos/dist/aos.css"; // You can also use <link> for styles
 
 const GAP_LARGE = 12;
 const GAP_SMALL = 8;
@@ -92,6 +94,10 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { loading, error, data } = useQuery(LANDING_PAGE);
 
+  React.useEffect(() => {
+    AOS.init({ duration: 1000 });
+  }, []);
+
   if (loading) return <Loading />;
   if (error) {
     console.log(error);
@@ -137,6 +143,7 @@ const LandingPage = () => {
           sx={{ mt: 8, mb: 2 }}
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_SMALL) }}
+        
         >
           <Separator title="What Our Modules Contain" />
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
@@ -150,6 +157,7 @@ const LandingPage = () => {
           sx={{ mt: 8, mb: 2 }}
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_LARGE) }}
+          data-aos="fade-up"
         >
           <Separator title="Our Instructors" />
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
@@ -163,6 +171,7 @@ const LandingPage = () => {
           sx={{ mt: 8, mb: 2 }}
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_LARGE) }}
+          data-aos="fade-up"
         >
           <Separator title="Our Subjects" />
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
@@ -176,6 +185,7 @@ const LandingPage = () => {
             marginTop: theme.spacing(GAP_LARGE),
             backgroundColor: theme.palette.softblue,
           }}
+       
         >
           <Container
             component="main"
@@ -186,6 +196,7 @@ const LandingPage = () => {
               textAlign: "center",
               position: "relative",
             }}
+            data-aos="fade-up"
           >
             <Button
               variant="outlined"
@@ -209,6 +220,7 @@ const LandingPage = () => {
           sx={{ mt: 8, mb: 2 }}
           maxWidth="md"
           style={{ marginTop: theme.spacing(GAP_LARGE) }}
+          data-aos="fade-up"
         >
           <Separator title="Our Community" />
           <div style={{ marginTop: theme.spacing(GAP_SMALL) }}>
@@ -222,6 +234,7 @@ const LandingPage = () => {
             marginTop: theme.spacing(GAP_LARGE),
             backgroundColor: theme.palette.softyellow,
           }}
+        
         >
           <Container
             component="main"
@@ -232,6 +245,7 @@ const LandingPage = () => {
               textAlign: "center",
               position: "relative",
             }}
+            data-aos="fade-up"
           >
             <Typography variant="h2" style={{ color: theme.palette.navyblue }}>
               <Link href="/sign-up" style={{ textDecoration: "none" }}>
