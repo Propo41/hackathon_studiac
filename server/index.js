@@ -27,8 +27,8 @@ app.get("*", (req, res) => {
   res.sendFile(join(__dirname, "..", "build", "index.html"));
 });
 
-// start express server on port 5000
-app.listen(5000, () => {
-  console.log("server started on port 5000");
+// start express server on port 5000 or heroku port
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`server started on port : ${process.env.PORT || 5000}`);
   console.log("http://localhost:5000");
 });
