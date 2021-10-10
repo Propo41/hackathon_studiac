@@ -29,14 +29,14 @@ Name: Shouvik Rahman
 
 Email: shouvik.geist@gmail.com
 
-Phone: -
+Phone: 013 0714 9677
 
 ------
 Name: Samio Ahmed
 
 Email: samio.bhuiyan@gmail.com
 
-Phone: -
+Phone: 01303344570
 
 ------
 
