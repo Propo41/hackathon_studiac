@@ -30,12 +30,12 @@
   "scripts": {
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "start": "(cd server && yarn run)",
-    "azure": "NPM_CONFIG_PRODUCTION=false npm run build && (cd server && npm start)",
+    "start": "(cd server && npm start)",
     "eject": "react-scripts eject",
     "server": "(cd server && npm start)",
     "client": "react-scripts start",
-    "dev": "npm run build && (cd server && npm start)"
+    "dev": "npm run build && (cd server && npm start)",
+    "heroku-postbuild": "(cd server && npm install)"
   },
   "eslintConfig": {
     "extends": [
