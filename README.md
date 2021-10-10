@@ -10,37 +10,6 @@ These modules will help the students learn the practical aspect of learning scie
 [![react-ready](https://img.shields.io/badge/database-postgresql-informational)](#)
 
 
-## The Team: Hackathon
-
-**Team ID** : CH607
-
-**Category** : Education
-
-### Team Members:
----
-Name: AM Ali Ahnaf
-
-Email: aliahnaf327@gmail.com
-
-Phone: 01966184892
-
----
-Name: Shouvik Rahman
-
-Email: shouvik.geist@gmail.com
-
-Phone: 013 0714 9677
-
-------
-Name: Samio Ahmed
-
-Email: samio.bhuiyan@gmail.com
-
-Phone: 01303344570
-
-------
-
-
 ## Installation
 
 To run the project, enter the following command
@@ -80,5 +49,7 @@ The app won't function properly without the `.env` file. The credentials for the
 
 - Database Design: https://dbdiagram.io/d/6149de36825b5b01460c6f9e 
 - DFD and Use case: https://lucid.app/lucidspark/e48389e4-f005-4008-895e-80f173258a6c/edit?invitationId=inv_279ae91f-1aa9-425e-a383-4cb6184fa5bc 
+- Admin API list: https://documenter.getpostman.com/view/15625399/UV5RkzJX 
+- Student API list: https://documenter.getpostman.com/view/15625399/UV5RkzJY 
 
 
