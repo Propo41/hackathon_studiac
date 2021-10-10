@@ -74,4 +74,9 @@ npm run server
 The app won't function properly without the `.env` file. The credentials for the `.env` file can be found [here](https://docs.google.com/document/d/1P1G3x-46HDBgt11Cxw6M90-t4BjzKscCY0waHzswNps/edit?usp=sharing)
 
 
+## Backend Architecture
+
+- Database Design: https://dbdiagram.io/d/6149de36825b5b01460c6f9e 
+- DFD and Use case: https://lucid.app/lucidspark/e48389e4-f005-4008-895e-80f173258a6c/edit?invitationId=inv_279ae91f-1aa9-425e-a383-4cb6184fa5bc 
+
 
